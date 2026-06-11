@@ -1,0 +1,3 @@
+type: custom:blind-control-card
+entity: cover.persiana_salon
+name: Persiana Salon

@@ -1,0 +1,34 @@
+{
+  "name": "blind-control-card",
+  "version": "0.1.0",
+  "description": "Lovelace custom card for controlling Home Assistant cover entities.",
+  "type": "module",
+  "main": "dist/blind-control-card.js",
+  "module": "dist/blind-control-card.js",
+  "files": [
+    "dist",
+    "hacs.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "lit": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0"
+  },
+  "keywords": [
+    "home-assistant",
+    "lovelace",
+    "custom-card",
+    "cover",
+    "blinds"
+  ],
+  "license": "MIT"
+}
