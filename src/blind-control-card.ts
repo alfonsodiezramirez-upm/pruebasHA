@@ -9,7 +9,7 @@ type CoverService =
   | "set_cover_position";
 
 interface BlindControlCardConfig {
-  type: string;
+  type?: string;
   entity?: string;
   name?: string;
   icon?: string;
@@ -17,6 +17,7 @@ interface BlindControlCardConfig {
   card_theme?: BlindControlCardTheme;
   slider_height?: number;
   slider_width?: number;
+  slider_touch_width?: number;
   button_size?: number;
   show_name?: boolean;
   show_position?: boolean;
@@ -51,6 +52,7 @@ interface HomeAssistant {
 interface SizePreset {
   sliderHeight: number;
   sliderWidth: number;
+  sliderTouchWidth: number;
   buttonSize: number;
   iconSize: number;
   padding: number;
@@ -61,6 +63,18 @@ interface SizePreset {
 interface EntitySuggestion {
   label?: string;
   config: BlindControlCardConfig;
+}
+
+interface CustomCardEntry {
+  type: string;
+  name: string;
+  description: string;
+  preview?: boolean;
+  documentationURL?: string;
+  getEntitySuggestion?: (
+    hass: HomeAssistant,
+    entityId: string
+  ) => EntitySuggestion | EntitySuggestion[] | null;
 }
 
 const COVER_FEATURE_OPEN = 1;
@@ -79,6 +93,7 @@ const SIZE_PRESETS: Record<BlindControlCardSize, SizePreset> = {
   small: {
     sliderHeight: 150,
     sliderWidth: 14,
+    sliderTouchWidth: 44,
     buttonSize: 38,
     iconSize: 20,
     padding: 12,
@@ -88,6 +103,7 @@ const SIZE_PRESETS: Record<BlindControlCardSize, SizePreset> = {
   medium: {
     sliderHeight: 210,
     sliderWidth: 14,
+    sliderTouchWidth: 44,
     buttonSize: 44,
     iconSize: 22,
     padding: 16,
@@ -97,6 +113,7 @@ const SIZE_PRESETS: Record<BlindControlCardSize, SizePreset> = {
   large: {
     sliderHeight: 280,
     sliderWidth: 16,
+    sliderTouchWidth: 48,
     buttonSize: 54,
     iconSize: 26,
     padding: 20,
@@ -113,6 +130,7 @@ const EDITOR_LABELS: Record<string, string> = {
   card_theme: "Tema de tarjeta",
   slider_height: "Altura de barra",
   slider_width: "Ancho de barra",
+  slider_touch_width: "Zona tactil del slider",
   button_size: "Tamano de botones",
   show_name: "Mostrar nombre",
   show_position: "Mostrar porcentaje",
@@ -204,6 +222,18 @@ const EDITOR_SCHEMA = [
         min: 8,
         max: 44,
         step: 1,
+        mode: "slider",
+        unit_of_measurement: "px"
+      }
+    }
+  },
+  {
+    name: "slider_touch_width",
+    selector: {
+      number: {
+        min: 28,
+        max: 96,
+        step: 2,
         mode: "slider",
         unit_of_measurement: "px"
       }
@@ -316,7 +346,6 @@ class BlindControlCard extends LitElement {
     );
 
     return {
-      type: "custom:blind-control-card",
       entity: entity ?? "cover.persiana_salon",
       size: DEFAULT_SIZE
     };
@@ -633,6 +662,12 @@ class BlindControlCard extends LitElement {
         44,
         preset.sliderWidth
       ),
+      sliderTouchWidth: clampNumber(
+        this._config?.slider_touch_width,
+        28,
+        96,
+        preset.sliderTouchWidth
+      ),
       buttonSize: clampNumber(
         this._config?.button_size,
         34,
@@ -646,6 +681,7 @@ class BlindControlCard extends LitElement {
     return [
       `--blind-slider-height: ${settings.sliderHeight}px`,
       `--blind-slider-width: ${settings.sliderWidth}px`,
+      `--blind-slider-touch-width: ${settings.sliderTouchWidth}px`,
       `--blind-thumb-size: ${Math.max(30, settings.sliderWidth + 16)}px`,
       `--blind-button-size: ${settings.buttonSize}px`,
       `--blind-icon-size: ${settings.iconSize}px`,
@@ -745,7 +781,6 @@ class BlindControlCard extends LitElement {
       height: var(--blind-slider-height, 210px);
       display: grid;
       place-items: center;
-      touch-action: none;
     }
 
     .slider-track {
@@ -783,12 +818,16 @@ class BlindControlCard extends LitElement {
 
     .position-slider {
       position: absolute;
-      inset: 14px 0;
-      width: 100%;
+      top: 14px;
+      bottom: 14px;
+      left: 50%;
+      width: var(--blind-slider-touch-width, 44px);
       height: calc(100% - 28px);
       margin: 0;
       opacity: 0;
       cursor: pointer;
+      transform: translateX(-50%);
+      touch-action: none;
       writing-mode: vertical-lr;
       direction: rtl;
     }
@@ -1062,6 +1101,7 @@ function cleanConfig(config: BlindControlCardConfig): BlindControlCardConfig {
 
   const sliderHeight = cleanNumber(next.slider_height, 120, 420);
   const sliderWidth = cleanNumber(next.slider_width, 8, 44);
+  const sliderTouchWidth = cleanNumber(next.slider_touch_width, 28, 96);
   const buttonSize = cleanNumber(next.button_size, 34, 72);
 
   if (sliderHeight === undefined) {
@@ -1074,6 +1114,12 @@ function cleanConfig(config: BlindControlCardConfig): BlindControlCardConfig {
     delete next.slider_width;
   } else {
     next.slider_width = sliderWidth;
+  }
+
+  if (sliderTouchWidth === undefined) {
+    delete next.slider_touch_width;
+  } else {
+    next.slider_touch_width = sliderTouchWidth;
   }
 
   if (buttonSize === undefined) {
@@ -1156,7 +1202,7 @@ function getBlindControlEntitySuggestion(
   hass: HomeAssistant,
   entityId: string
 ): EntitySuggestion[] | null {
-  if (!entityId.startsWith("cover.")) {
+  if (entityId.split(".")[0] !== "cover") {
     return null;
   }
 
@@ -1219,27 +1265,38 @@ if (!customElements.get("blind-control-card-editor")) {
 
 declare global {
   interface Window {
-    customCards?: Array<{
-      type: string;
-      name: string;
-      description: string;
-      preview?: boolean;
-      getEntitySuggestion?: (
-        hass: HomeAssistant,
-        entityId: string
-      ) => EntitySuggestion | EntitySuggestion[] | null;
-    }>;
+    customCards?: CustomCardEntry[];
+    __BLIND_CONTROL_CARD_VERSION__?: string;
   }
 }
 
 window.customCards = window.customCards ?? [];
 
-if (!window.customCards.some((card) => card.type === "blind-control-card")) {
-  window.customCards.push({
-    type: "blind-control-card",
-    name: "Blind Control Card",
-    description: "Control responsive para persianas y covers Shelly.",
-    preview: true,
-    getEntitySuggestion: getBlindControlEntitySuggestion
-  });
+const blindControlCardEntry: CustomCardEntry = {
+  type: "blind-control-card",
+  name: "Blind Control Card",
+  description: "Control responsive para persianas y covers Shelly.",
+  preview: true,
+  documentationURL:
+    "https://developers.home-assistant.io/docs/frontend/custom-ui/custom-card/#suggesting-your-card-for-an-entity",
+  getEntitySuggestion: getBlindControlEntitySuggestion
+};
+
+const registeredCard = window.customCards.find(
+  (card) => card.type === blindControlCardEntry.type
+);
+
+if (registeredCard) {
+  Object.assign(registeredCard, blindControlCardEntry);
+} else {
+  window.customCards.push(blindControlCardEntry);
+}
+
+if (!window.__BLIND_CONTROL_CARD_VERSION__) {
+  console.info(
+    "%cBLIND-CONTROL-CARD%c 0.5.0 loaded",
+    "color: var(--primary-color); font-weight: 700;",
+    "color: inherit;"
+  );
+  window.__BLIND_CONTROL_CARD_VERSION__ = "0.5.0";
 }

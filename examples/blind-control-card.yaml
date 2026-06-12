@@ -5,5 +5,6 @@ icon: mdi:blinds
 card_theme: minimal
 slider_height: 160
 slider_width: 22
+slider_touch_width: 40
 button_size: 38
 button_background_color: "rgba(120, 120, 120, 0.12)"
