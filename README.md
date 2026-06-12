@@ -104,7 +104,7 @@ dist/blind-control-card.js
 | `card_theme` | `default`, `minimal`, `filled`, `outline` | No | Preset visual interno de la tarjeta. Por defecto: `default`. |
 | `slider_height` | number | No | Altura personalizada de la barra en pixeles, entre `120` y `420`. |
 | `slider_width` | number | No | Ancho personalizado de la barra en pixeles, entre `8` y `44`. |
-| `slider_touch_width` | number | No | Ancho de la zona tactil del slider en pixeles, entre `28` y `96`. Por defecto es mucho mas estrecha que el bloque visual de la tarjeta. |
+| `slider_touch_width` | number | No | Ancho de la zona tactil del slider en pixeles, entre `18` y `72`. Para columnas estrechas, prueba `22` o `24`. |
 | `button_size` | number | No | Tamano personalizado de los botones en pixeles, entre `34` y `72`. |
 | `show_name` | boolean | No | Muestra u oculta el nombre. Por defecto: `true`. |
 | `show_position` | boolean | No | Muestra u oculta el porcentaje/estado. Por defecto: `true`. |
@@ -126,7 +126,7 @@ icon: mdi:blinds
 card_theme: minimal
 slider_height: 160
 slider_width: 22
-slider_touch_width: 40
+slider_touch_width: 24
 button_size: 38
 button_background_color: "rgba(120, 120, 120, 0.12)"
 stop_button_background_color: "#b00020"
@@ -139,7 +139,7 @@ type: custom:blind-control-card
 entity: cover.shelly_2pm_gen4_persiana
 show_buttons: false
 slider_width: 28
-slider_touch_width: 44
+slider_touch_width: 26
 ```
 
 ## Solo botones

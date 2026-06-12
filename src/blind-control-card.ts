@@ -93,7 +93,7 @@ const SIZE_PRESETS: Record<BlindControlCardSize, SizePreset> = {
   small: {
     sliderHeight: 150,
     sliderWidth: 14,
-    sliderTouchWidth: 44,
+    sliderTouchWidth: 26,
     buttonSize: 38,
     iconSize: 20,
     padding: 12,
@@ -103,7 +103,7 @@ const SIZE_PRESETS: Record<BlindControlCardSize, SizePreset> = {
   medium: {
     sliderHeight: 210,
     sliderWidth: 14,
-    sliderTouchWidth: 44,
+    sliderTouchWidth: 28,
     buttonSize: 44,
     iconSize: 22,
     padding: 16,
@@ -113,7 +113,7 @@ const SIZE_PRESETS: Record<BlindControlCardSize, SizePreset> = {
   large: {
     sliderHeight: 280,
     sliderWidth: 16,
-    sliderTouchWidth: 48,
+    sliderTouchWidth: 30,
     buttonSize: 54,
     iconSize: 26,
     padding: 20,
@@ -231,8 +231,8 @@ const EDITOR_SCHEMA = [
     name: "slider_touch_width",
     selector: {
       number: {
-        min: 28,
-        max: 96,
+        min: 18,
+        max: 72,
         step: 2,
         mode: "slider",
         unit_of_measurement: "px"
@@ -303,6 +303,8 @@ class BlindControlCard extends LitElement {
     _error: { state: true },
     _dragPosition: { state: true }
   };
+
+  private _activePointerId?: number;
 
   public setConfig(config: BlindControlCardConfig): void {
     const normalizedConfig = normalizeConfig(config);
@@ -396,6 +398,7 @@ class BlindControlCard extends LitElement {
       COVER_FEATURE_SET_POSITION,
       position !== undefined
     );
+    const sliderDisabled = !supportsPosition || unavailable;
     const showName = this._config.show_name ?? DEFAULT_SHOW_NAME;
     const showPosition = this._config.show_position ?? DEFAULT_SHOW_POSITION;
     const showSlider = this._config.show_slider ?? DEFAULT_SHOW_SLIDER;
@@ -417,9 +420,7 @@ class BlindControlCard extends LitElement {
             ? html`
                 <div class="slider-block">
                   <div
-                    class=${`slider-shell${
-                      supportsPosition && !unavailable ? "" : " disabled"
-                    }`}
+                    class=${`slider-shell${sliderDisabled ? " disabled" : ""}`}
                     style=${`--position: ${visiblePosition};`}
                   >
                     <span class="scale top">100</span>
@@ -428,18 +429,22 @@ class BlindControlCard extends LitElement {
                       <div class="slider-thumb"></div>
                     </div>
                     <span class="scale bottom">0</span>
-                    <input
-                      class="position-slider"
-                      type="range"
-                      min="0"
-                      max="100"
-                      step="1"
-                      .value=${String(visiblePosition)}
-                      ?disabled=${!supportsPosition || unavailable}
+                    <div
+                      class=${`position-slider${sliderDisabled ? " disabled" : ""}`}
+                      role="slider"
+                      tabindex=${sliderDisabled ? "-1" : "0"}
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                      aria-valuenow=${String(visiblePosition)}
+                      aria-valuetext=${`${visiblePosition}%`}
+                      aria-disabled=${String(sliderDisabled)}
                       aria-label=${`Posicion de ${name}`}
-                      @input=${this._handleSliderInput}
-                      @change=${this._handlePositionChange}
-                    />
+                      @pointerdown=${this._handleSliderPointerDown}
+                      @pointermove=${this._handleSliderPointerMove}
+                      @pointerup=${this._handleSliderPointerUp}
+                      @pointercancel=${this._handleSliderPointerCancel}
+                      @keydown=${this._handleSliderKeyDown}
+                    ></div>
                   </div>
 
                   ${showPosition
@@ -541,18 +546,101 @@ class BlindControlCard extends LitElement {
     `;
   }
 
-  private _handleSliderInput(event: Event): void {
-    const input = event.currentTarget as HTMLInputElement;
+  private _handleSliderPointerDown(event: PointerEvent): void {
+    if (!event.isPrimary || !this._canUseSlider()) {
+      return;
+    }
+
+    const slider = event.currentTarget as HTMLElement;
+    this._activePointerId = event.pointerId;
     this._isSliding = true;
-    this._dragPosition = Number(input.value);
+    slider.setPointerCapture(event.pointerId);
+    this._dragPosition = this._positionFromPointerEvent(event, slider);
+    event.preventDefault();
   }
 
-  private _handlePositionChange(event: Event): void {
-    const input = event.currentTarget as HTMLInputElement;
-    const position = Number(input.value);
+  private _handleSliderPointerMove(event: PointerEvent): void {
+    if (event.pointerId !== this._activePointerId) {
+      return;
+    }
+
+    if (!this._canUseSlider()) {
+      this._activePointerId = undefined;
+      this._isSliding = false;
+      return;
+    }
+
+    this._dragPosition = this._positionFromPointerEvent(
+      event,
+      event.currentTarget as HTMLElement
+    );
+    event.preventDefault();
+  }
+
+  private _handleSliderPointerUp(event: PointerEvent): void {
+    if (event.pointerId !== this._activePointerId) {
+      return;
+    }
+
+    const slider = event.currentTarget as HTMLElement;
+    if (!this._canUseSlider()) {
+      this._activePointerId = undefined;
+      this._isSliding = false;
+      slider.releasePointerCapture(event.pointerId);
+      return;
+    }
+
+    const position = this._positionFromPointerEvent(event, slider);
+    this._activePointerId = undefined;
     this._isSliding = false;
     this._dragPosition = position;
+    slider.releasePointerCapture(event.pointerId);
     void this._callCoverService("set_cover_position", { position });
+    event.preventDefault();
+  }
+
+  private _handleSliderPointerCancel(event: PointerEvent): void {
+    if (event.pointerId !== this._activePointerId) {
+      return;
+    }
+
+    this._activePointerId = undefined;
+    this._isSliding = false;
+  }
+
+  private _handleSliderKeyDown(event: KeyboardEvent): void {
+    if (!this._canUseSlider()) {
+      return;
+    }
+
+    const currentPosition = this._getVisibleSliderPosition();
+    const step = event.shiftKey ? 10 : 5;
+    let nextPosition: number | undefined;
+
+    if (event.key === "ArrowUp" || event.key === "ArrowRight") {
+      nextPosition = currentPosition + step;
+    } else if (event.key === "ArrowDown" || event.key === "ArrowLeft") {
+      nextPosition = currentPosition - step;
+    } else if (event.key === "Home") {
+      nextPosition = 0;
+    } else if (event.key === "End") {
+      nextPosition = 100;
+    }
+
+    if (nextPosition === undefined) {
+      return;
+    }
+
+    const position = this._clampPosition(nextPosition);
+    this._dragPosition = position;
+    void this._callCoverService("set_cover_position", { position });
+    event.preventDefault();
+  }
+
+  private _positionFromPointerEvent(event: PointerEvent, slider: HTMLElement): number {
+    const rect = slider.getBoundingClientRect();
+    const ratio = (rect.bottom - event.clientY) / rect.height;
+    return this._clampPosition(ratio * 100);
   }
 
   private async _callCoverService(
@@ -628,6 +716,40 @@ class BlindControlCard extends LitElement {
     return stateObj.state === "unavailable" || stateObj.state === "unknown";
   }
 
+  private _canUseSlider(): boolean {
+    if (!this.hass || !this._config?.entity) {
+      return false;
+    }
+
+    const stateObj = this.hass.states[this._config.entity];
+    if (!stateObj || this._isUnavailable(stateObj)) {
+      return false;
+    }
+
+    return this._supportsFeature(
+      stateObj,
+      COVER_FEATURE_SET_POSITION,
+      this._getCurrentPosition(stateObj) !== undefined
+    );
+  }
+
+  private _getVisibleSliderPosition(): number {
+    if (!this.hass || !this._config?.entity) {
+      return this._dragPosition ?? 0;
+    }
+
+    const stateObj = this.hass.states[this._config.entity];
+    if (!stateObj) {
+      return this._dragPosition ?? 0;
+    }
+
+    return (
+      this._dragPosition ??
+      this._getCurrentPosition(stateObj) ??
+      this._positionFromState(stateObj)
+    );
+  }
+
   private _getIcon(): string | undefined {
     const icon = this._config?.icon?.trim();
     return icon || undefined;
@@ -664,8 +786,8 @@ class BlindControlCard extends LitElement {
       ),
       sliderTouchWidth: clampNumber(
         this._config?.slider_touch_width,
-        28,
-        96,
+        18,
+        72,
         preset.sliderTouchWidth
       ),
       buttonSize: clampNumber(
@@ -821,7 +943,7 @@ class BlindControlCard extends LitElement {
       top: 14px;
       bottom: 14px;
       left: 50%;
-      width: var(--blind-slider-touch-width, 44px);
+      width: var(--blind-slider-touch-width, 28px);
       height: calc(100% - 28px);
       margin: 0;
       opacity: 0;
@@ -832,12 +954,10 @@ class BlindControlCard extends LitElement {
       direction: rtl;
     }
 
-    .position-slider:disabled {
-      cursor: not-allowed;
-    }
-
+    .position-slider.disabled,
     .slider-shell.disabled {
       opacity: 0.55;
+      cursor: not-allowed;
     }
 
     .slider-shell:focus-within .slider-thumb {
@@ -1101,7 +1221,7 @@ function cleanConfig(config: BlindControlCardConfig): BlindControlCardConfig {
 
   const sliderHeight = cleanNumber(next.slider_height, 120, 420);
   const sliderWidth = cleanNumber(next.slider_width, 8, 44);
-  const sliderTouchWidth = cleanNumber(next.slider_touch_width, 28, 96);
+  const sliderTouchWidth = cleanNumber(next.slider_touch_width, 18, 72);
   const buttonSize = cleanNumber(next.button_size, 34, 72);
 
   if (sliderHeight === undefined) {
@@ -1294,9 +1414,9 @@ if (registeredCard) {
 
 if (!window.__BLIND_CONTROL_CARD_VERSION__) {
   console.info(
-    "%cBLIND-CONTROL-CARD%c 0.5.0 loaded",
+    "%cBLIND-CONTROL-CARD%c 0.6.0 loaded",
     "color: var(--primary-color); font-weight: 700;",
     "color: inherit;"
   );
-  window.__BLIND_CONTROL_CARD_VERSION__ = "0.5.0";
+  window.__BLIND_CONTROL_CARD_VERSION__ = "0.6.0";
 }

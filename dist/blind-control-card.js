@@ -3,18 +3,18 @@
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const W = globalThis, ot = W.ShadowRoot && (W.ShadyCSS === void 0 || W.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, st = Symbol(), at = /* @__PURE__ */ new WeakMap();
-let yt = class {
+const B = globalThis, st = B.ShadowRoot && (B.ShadyCSS === void 0 || B.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, rt = Symbol(), lt = /* @__PURE__ */ new WeakMap();
+let wt = class {
   constructor(t, e, i) {
-    if (this._$cssResult$ = !0, i !== st) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
+    if (this._$cssResult$ = !0, i !== rt) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
     this.cssText = t, this.t = e;
   }
   get styleSheet() {
     let t = this.o;
     const e = this.t;
-    if (ot && t === void 0) {
+    if (st && t === void 0) {
       const i = e !== void 0 && e.length === 1;
-      i && (t = at.get(e)), t === void 0 && ((this.o = t = new CSSStyleSheet()).replaceSync(this.cssText), i && at.set(e, t));
+      i && (t = lt.get(e)), t === void 0 && ((this.o = t = new CSSStyleSheet()).replaceSync(this.cssText), i && lt.set(e, t));
     }
     return t;
   }
@@ -22,33 +22,33 @@ let yt = class {
     return this.cssText;
   }
 };
-const zt = (s) => new yt(typeof s == "string" ? s : s + "", void 0, st), wt = (s, ...t) => {
+const Ut = (s) => new wt(typeof s == "string" ? s : s + "", void 0, rt), St = (s, ...t) => {
   const e = s.length === 1 ? s[0] : t.reduce((i, o, r) => i + ((n) => {
     if (n._$cssResult$ === !0) return n.cssText;
     if (typeof n == "number") return n;
     throw Error("Value passed to 'css' function must be a 'css' function result: " + n + ". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.");
   })(o) + s[r + 1], s[0]);
-  return new yt(e, s, st);
-}, Nt = (s, t) => {
-  if (ot) s.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
+  return new wt(e, s, rt);
+}, Ot = (s, t) => {
+  if (st) s.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
   else for (const e of t) {
-    const i = document.createElement("style"), o = W.litNonce;
+    const i = document.createElement("style"), o = B.litNonce;
     o !== void 0 && i.setAttribute("nonce", o), i.textContent = e.cssText, s.appendChild(i);
   }
-}, lt = ot ? (s) => s : (s) => s instanceof CSSStyleSheet ? ((t) => {
+}, ct = st ? (s) => s : (s) => s instanceof CSSStyleSheet ? ((t) => {
   let e = "";
   for (const i of t.cssRules) e += i.cssText;
-  return zt(e);
+  return Ut(e);
 })(s) : s;
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const { is: Ot, defineProperty: Ut, getOwnPropertyDescriptor: Ht, getOwnPropertyNames: Rt, getOwnPropertySymbols: Mt, getPrototypeOf: Lt } = Object, g = globalThis, ct = g.trustedTypes, Dt = ct ? ct.emptyScript : "", J = g.reactiveElementPolyfillSupport, z = (s, t) => s, Q = { toAttribute(s, t) {
+const { is: Nt, defineProperty: Rt, getOwnPropertyDescriptor: Ht, getOwnPropertyNames: Mt, getOwnPropertySymbols: Dt, getPrototypeOf: It } = Object, b = globalThis, dt = b.trustedTypes, Lt = dt ? dt.emptyScript : "", K = b.reactiveElementPolyfillSupport, z = (s, t) => s, Y = { toAttribute(s, t) {
   switch (t) {
     case Boolean:
-      s = s ? Dt : null;
+      s = s ? Lt : null;
       break;
     case Object:
     case Array:
@@ -73,19 +73,19 @@ const { is: Ot, defineProperty: Ut, getOwnPropertyDescriptor: Ht, getOwnProperty
       }
   }
   return e;
-} }, At = (s, t) => !Ot(s, t), dt = { attribute: !0, type: String, converter: Q, reflect: !1, useDefault: !1, hasChanged: At };
-Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), g.litPropertyMetadata ?? (g.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
-let A = class extends HTMLElement {
+} }, At = (s, t) => !Nt(s, t), ht = { attribute: !0, type: String, converter: Y, reflect: !1, useDefault: !1, hasChanged: At };
+Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), b.litPropertyMetadata ?? (b.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
+let S = class extends HTMLElement {
   static addInitializer(t) {
     this._$Ei(), (this.l ?? (this.l = [])).push(t);
   }
   static get observedAttributes() {
     return this.finalize(), this._$Eh && [...this._$Eh.keys()];
   }
-  static createProperty(t, e = dt) {
+  static createProperty(t, e = ht) {
     if (e.state && (e.attribute = !1), this._$Ei(), this.prototype.hasOwnProperty(t) && ((e = Object.create(e)).wrapped = !0), this.elementProperties.set(t, e), !e.noAccessor) {
       const i = Symbol(), o = this.getPropertyDescriptor(t, i, e);
-      o !== void 0 && Ut(this.prototype, t, o);
+      o !== void 0 && Rt(this.prototype, t, o);
     }
   }
   static getPropertyDescriptor(t, e, i) {
@@ -100,17 +100,17 @@ let A = class extends HTMLElement {
     }, configurable: !0, enumerable: !0 };
   }
   static getPropertyOptions(t) {
-    return this.elementProperties.get(t) ?? dt;
+    return this.elementProperties.get(t) ?? ht;
   }
   static _$Ei() {
     if (this.hasOwnProperty(z("elementProperties"))) return;
-    const t = Lt(this);
+    const t = It(this);
     t.finalize(), t.l !== void 0 && (this.l = [...t.l]), this.elementProperties = new Map(t.elementProperties);
   }
   static finalize() {
     if (this.hasOwnProperty(z("finalized"))) return;
     if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(z("properties"))) {
-      const e = this.properties, i = [...Rt(e), ...Mt(e)];
+      const e = this.properties, i = [...Mt(e), ...Dt(e)];
       for (const o of i) this.createProperty(o, e[o]);
     }
     const t = this[Symbol.metadata];
@@ -129,8 +129,8 @@ let A = class extends HTMLElement {
     const e = [];
     if (Array.isArray(t)) {
       const i = new Set(t.flat(1 / 0).reverse());
-      for (const o of i) e.unshift(lt(o));
-    } else t !== void 0 && e.push(lt(t));
+      for (const o of i) e.unshift(ct(o));
+    } else t !== void 0 && e.push(ct(t));
     return e;
   }
   static _$Eu(t, e) {
@@ -159,7 +159,7 @@ let A = class extends HTMLElement {
   }
   createRenderRoot() {
     const t = this.shadowRoot ?? this.attachShadow(this.constructor.shadowRootOptions);
-    return Nt(t, this.constructor.elementStyles), t;
+    return Ot(t, this.constructor.elementStyles), t;
   }
   connectedCallback() {
     var t;
@@ -184,7 +184,7 @@ let A = class extends HTMLElement {
     var r;
     const i = this.constructor.elementProperties.get(t), o = this.constructor._$Eu(t, i);
     if (o !== void 0 && i.reflect === !0) {
-      const n = (((r = i.converter) == null ? void 0 : r.toAttribute) !== void 0 ? i.converter : Q).toAttribute(e, i.type);
+      const n = (((r = i.converter) == null ? void 0 : r.toAttribute) !== void 0 ? i.converter : Y).toAttribute(e, i.type);
       this._$Em = t, n == null ? this.removeAttribute(o) : this.setAttribute(o, n), this._$Em = null;
     }
   }
@@ -192,7 +192,7 @@ let A = class extends HTMLElement {
     var r, n;
     const i = this.constructor, o = i._$Eh.get(t);
     if (o !== void 0 && this._$Em !== o) {
-      const l = i.getPropertyOptions(o), a = typeof l.converter == "function" ? { fromAttribute: l.converter } : ((r = l.converter) == null ? void 0 : r.fromAttribute) !== void 0 ? l.converter : Q;
+      const l = i.getPropertyOptions(o), a = typeof l.converter == "function" ? { fromAttribute: l.converter } : ((r = l.converter) == null ? void 0 : r.fromAttribute) !== void 0 ? l.converter : Y;
       this._$Em = o;
       const d = a.fromAttribute(e, l.type);
       this[o] = d ?? ((n = this._$Ej) == null ? void 0 : n.get(o)) ?? d, this._$Em = null;
@@ -278,59 +278,59 @@ let A = class extends HTMLElement {
   firstUpdated(t) {
   }
 };
-A.elementStyles = [], A.shadowRootOptions = { mode: "open" }, A[z("elementProperties")] = /* @__PURE__ */ new Map(), A[z("finalized")] = /* @__PURE__ */ new Map(), J == null || J({ ReactiveElement: A }), (g.reactiveElementVersions ?? (g.reactiveElementVersions = [])).push("2.1.2");
+S.elementStyles = [], S.shadowRootOptions = { mode: "open" }, S[z("elementProperties")] = /* @__PURE__ */ new Map(), S[z("finalized")] = /* @__PURE__ */ new Map(), K == null || K({ ReactiveElement: S }), (b.reactiveElementVersions ?? (b.reactiveElementVersions = [])).push("2.1.2");
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const N = globalThis, ht = (s) => s, I = N.trustedTypes, ut = I ? I.createPolicy("lit-html", { createHTML: (s) => s }) : void 0, xt = "$lit$", b = `lit$${Math.random().toFixed(9).slice(2)}$`, St = "?" + b, Ft = `<${St}>`, y = document, O = () => y.createComment(""), U = (s) => s === null || typeof s != "object" && typeof s != "function", rt = Array.isArray, Bt = (s) => rt(s) || typeof (s == null ? void 0 : s[Symbol.iterator]) == "function", K = `[ 	
-\f\r]`, P = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, pt = /-->/g, _t = />/g, f = RegExp(`>|${K}(?:([^\\s"'>=/]+)(${K}*=${K}*(?:[^ 	
-\f\r"'\`<>=]|("|')|))|$)`, "g"), mt = /'/g, bt = /"/g, Et = /^(?:script|style|textarea|title)$/i, Wt = (s) => (t, ...e) => ({ _$litType$: s, strings: t, values: e }), _ = Wt(1), C = Symbol.for("lit-noChange"), h = Symbol.for("lit-nothing"), gt = /* @__PURE__ */ new WeakMap(), $ = y.createTreeWalker(y, 129);
+const U = globalThis, ut = (s) => s, W = U.trustedTypes, pt = W ? W.createPolicy("lit-html", { createHTML: (s) => s }) : void 0, xt = "$lit$", g = `lit$${Math.random().toFixed(9).slice(2)}$`, Et = "?" + g, Ft = `<${Et}>`, y = document, O = () => y.createComment(""), N = (s) => s === null || typeof s != "object" && typeof s != "function", nt = Array.isArray, Bt = (s) => nt(s) || typeof (s == null ? void 0 : s[Symbol.iterator]) == "function", J = `[ 	
+\f\r]`, k = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, _t = /-->/g, mt = />/g, f = RegExp(`>|${J}(?:([^\\s"'>=/]+)(${J}*=${J}*(?:[^ 	
+\f\r"'\`<>=]|("|')|))|$)`, "g"), gt = /'/g, bt = /"/g, Pt = /^(?:script|style|textarea|title)$/i, Wt = (s) => (t, ...e) => ({ _$litType$: s, strings: t, values: e }), _ = Wt(1), P = Symbol.for("lit-noChange"), h = Symbol.for("lit-nothing"), ft = /* @__PURE__ */ new WeakMap(), $ = y.createTreeWalker(y, 129);
 function Ct(s, t) {
-  if (!rt(s) || !s.hasOwnProperty("raw")) throw Error("invalid template strings array");
-  return ut !== void 0 ? ut.createHTML(t) : t;
+  if (!nt(s) || !s.hasOwnProperty("raw")) throw Error("invalid template strings array");
+  return pt !== void 0 ? pt.createHTML(t) : t;
 }
-const It = (s, t) => {
+const jt = (s, t) => {
   const e = s.length - 1, i = [];
-  let o, r = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", n = P;
+  let o, r = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", n = k;
   for (let l = 0; l < e; l++) {
     const a = s[l];
     let d, u, c = -1, p = 0;
-    for (; p < a.length && (n.lastIndex = p, u = n.exec(a), u !== null); ) p = n.lastIndex, n === P ? u[1] === "!--" ? n = pt : u[1] !== void 0 ? n = _t : u[2] !== void 0 ? (Et.test(u[2]) && (o = RegExp("</" + u[2], "g")), n = f) : u[3] !== void 0 && (n = f) : n === f ? u[0] === ">" ? (n = o ?? P, c = -1) : u[1] === void 0 ? c = -2 : (c = n.lastIndex - u[2].length, d = u[1], n = u[3] === void 0 ? f : u[3] === '"' ? bt : mt) : n === bt || n === mt ? n = f : n === pt || n === _t ? n = P : (n = f, o = void 0);
+    for (; p < a.length && (n.lastIndex = p, u = n.exec(a), u !== null); ) p = n.lastIndex, n === k ? u[1] === "!--" ? n = _t : u[1] !== void 0 ? n = mt : u[2] !== void 0 ? (Pt.test(u[2]) && (o = RegExp("</" + u[2], "g")), n = f) : u[3] !== void 0 && (n = f) : n === f ? u[0] === ">" ? (n = o ?? k, c = -1) : u[1] === void 0 ? c = -2 : (c = n.lastIndex - u[2].length, d = u[1], n = u[3] === void 0 ? f : u[3] === '"' ? bt : gt) : n === bt || n === gt ? n = f : n === _t || n === mt ? n = k : (n = f, o = void 0);
     const m = n === f && s[l + 1].startsWith("/>") ? " " : "";
-    r += n === P ? a + Ft : c >= 0 ? (i.push(d), a.slice(0, c) + xt + a.slice(c) + b + m) : a + b + (c === -2 ? l : m);
+    r += n === k ? a + Ft : c >= 0 ? (i.push(d), a.slice(0, c) + xt + a.slice(c) + g + m) : a + g + (c === -2 ? l : m);
   }
   return [Ct(s, r + (s[e] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), i];
 };
-class H {
+class R {
   constructor({ strings: t, _$litType$: e }, i) {
     let o;
     this.parts = [];
     let r = 0, n = 0;
-    const l = t.length - 1, a = this.parts, [d, u] = It(t, e);
-    if (this.el = H.createElement(d, i), $.currentNode = this.el.content, e === 2 || e === 3) {
+    const l = t.length - 1, a = this.parts, [d, u] = jt(t, e);
+    if (this.el = R.createElement(d, i), $.currentNode = this.el.content, e === 2 || e === 3) {
       const c = this.el.content.firstChild;
       c.replaceWith(...c.childNodes);
     }
     for (; (o = $.nextNode()) !== null && a.length < l; ) {
       if (o.nodeType === 1) {
         if (o.hasAttributes()) for (const c of o.getAttributeNames()) if (c.endsWith(xt)) {
-          const p = u[n++], m = o.getAttribute(c).split(b), w = /([.?@])?(.*)/.exec(p);
-          a.push({ type: 1, index: r, name: w[2], strings: m, ctor: w[1] === "." ? Vt : w[1] === "?" ? qt : w[1] === "@" ? Zt : q }), o.removeAttribute(c);
-        } else c.startsWith(b) && (a.push({ type: 6, index: r }), o.removeAttribute(c));
-        if (Et.test(o.tagName)) {
-          const c = o.textContent.split(b), p = c.length - 1;
+          const p = u[n++], m = o.getAttribute(c).split(g), w = /([.?@])?(.*)/.exec(p);
+          a.push({ type: 1, index: r, name: w[2], strings: m, ctor: w[1] === "." ? qt : w[1] === "?" ? Zt : w[1] === "@" ? Kt : q }), o.removeAttribute(c);
+        } else c.startsWith(g) && (a.push({ type: 6, index: r }), o.removeAttribute(c));
+        if (Pt.test(o.tagName)) {
+          const c = o.textContent.split(g), p = c.length - 1;
           if (p > 0) {
-            o.textContent = I ? I.emptyScript : "";
+            o.textContent = W ? W.emptyScript : "";
             for (let m = 0; m < p; m++) o.append(c[m], O()), $.nextNode(), a.push({ type: 2, index: ++r });
             o.append(c[p], O());
           }
         }
-      } else if (o.nodeType === 8) if (o.data === St) a.push({ type: 2, index: r });
+      } else if (o.nodeType === 8) if (o.data === Et) a.push({ type: 2, index: r });
       else {
         let c = -1;
-        for (; (c = o.data.indexOf(b, c + 1)) !== -1; ) a.push({ type: 7, index: r }), c += b.length - 1;
+        for (; (c = o.data.indexOf(g, c + 1)) !== -1; ) a.push({ type: 7, index: r }), c += g.length - 1;
       }
       r++;
     }
@@ -340,14 +340,14 @@ class H {
     return i.innerHTML = t, i;
   }
 }
-function k(s, t, e = s, i) {
+function C(s, t, e = s, i) {
   var n, l;
-  if (t === C) return t;
+  if (t === P) return t;
   let o = i !== void 0 ? (n = e._$Co) == null ? void 0 : n[i] : e._$Cl;
-  const r = U(t) ? void 0 : t._$litDirective$;
-  return (o == null ? void 0 : o.constructor) !== r && ((l = o == null ? void 0 : o._$AO) == null || l.call(o, !1), r === void 0 ? o = void 0 : (o = new r(s), o._$AT(s, e, i)), i !== void 0 ? (e._$Co ?? (e._$Co = []))[i] = o : e._$Cl = o), o !== void 0 && (t = k(s, o._$AS(s, t.values), o, i)), t;
+  const r = N(t) ? void 0 : t._$litDirective$;
+  return (o == null ? void 0 : o.constructor) !== r && ((l = o == null ? void 0 : o._$AO) == null || l.call(o, !1), r === void 0 ? o = void 0 : (o = new r(s), o._$AT(s, e, i)), i !== void 0 ? (e._$Co ?? (e._$Co = []))[i] = o : e._$Cl = o), o !== void 0 && (t = C(s, o._$AS(s, t.values), o, i)), t;
 }
-class jt {
+class Vt {
   constructor(t, e) {
     this._$AV = [], this._$AN = void 0, this._$AD = t, this._$AM = e;
   }
@@ -364,7 +364,7 @@ class jt {
     for (; a !== void 0; ) {
       if (n === a.index) {
         let d;
-        a.type === 2 ? d = new F(r, r.nextSibling, this, t) : a.type === 1 ? d = new a.ctor(r, a.name, a.strings, this, t) : a.type === 6 && (d = new Jt(r, this, t)), this._$AV.push(d), a = i[++l];
+        a.type === 2 ? d = new L(r, r.nextSibling, this, t) : a.type === 1 ? d = new a.ctor(r, a.name, a.strings, this, t) : a.type === 6 && (d = new Jt(r, this, t)), this._$AV.push(d), a = i[++l];
       }
       n !== (a == null ? void 0 : a.index) && (r = $.nextNode(), n++);
     }
@@ -375,7 +375,7 @@ class jt {
     for (const i of this._$AV) i !== void 0 && (i.strings !== void 0 ? (i._$AI(t, i, e), e += i.strings.length - 2) : i._$AI(t[e])), e++;
   }
 }
-class F {
+class L {
   get _$AU() {
     var t;
     return ((t = this._$AM) == null ? void 0 : t._$AU) ?? this._$Cv;
@@ -395,7 +395,7 @@ class F {
     return this._$AB;
   }
   _$AI(t, e = this) {
-    t = k(this, t, e), U(t) ? t === h || t == null || t === "" ? (this._$AH !== h && this._$AR(), this._$AH = h) : t !== this._$AH && t !== C && this._(t) : t._$litType$ !== void 0 ? this.$(t) : t.nodeType !== void 0 ? this.T(t) : Bt(t) ? this.k(t) : this._(t);
+    t = C(this, t, e), N(t) ? t === h || t == null || t === "" ? (this._$AH !== h && this._$AR(), this._$AH = h) : t !== this._$AH && t !== P && this._(t) : t._$litType$ !== void 0 ? this.$(t) : t.nodeType !== void 0 ? this.T(t) : Bt(t) ? this.k(t) : this._(t);
   }
   O(t) {
     return this._$AA.parentNode.insertBefore(t, this._$AB);
@@ -404,33 +404,33 @@ class F {
     this._$AH !== t && (this._$AR(), this._$AH = this.O(t));
   }
   _(t) {
-    this._$AH !== h && U(this._$AH) ? this._$AA.nextSibling.data = t : this.T(y.createTextNode(t)), this._$AH = t;
+    this._$AH !== h && N(this._$AH) ? this._$AA.nextSibling.data = t : this.T(y.createTextNode(t)), this._$AH = t;
   }
   $(t) {
     var r;
-    const { values: e, _$litType$: i } = t, o = typeof i == "number" ? this._$AC(t) : (i.el === void 0 && (i.el = H.createElement(Ct(i.h, i.h[0]), this.options)), i);
+    const { values: e, _$litType$: i } = t, o = typeof i == "number" ? this._$AC(t) : (i.el === void 0 && (i.el = R.createElement(Ct(i.h, i.h[0]), this.options)), i);
     if (((r = this._$AH) == null ? void 0 : r._$AD) === o) this._$AH.p(e);
     else {
-      const n = new jt(o, this), l = n.u(this.options);
+      const n = new Vt(o, this), l = n.u(this.options);
       n.p(e), this.T(l), this._$AH = n;
     }
   }
   _$AC(t) {
-    let e = gt.get(t.strings);
-    return e === void 0 && gt.set(t.strings, e = new H(t)), e;
+    let e = ft.get(t.strings);
+    return e === void 0 && ft.set(t.strings, e = new R(t)), e;
   }
   k(t) {
-    rt(this._$AH) || (this._$AH = [], this._$AR());
+    nt(this._$AH) || (this._$AH = [], this._$AR());
     const e = this._$AH;
     let i, o = 0;
-    for (const r of t) o === e.length ? e.push(i = new F(this.O(O()), this.O(O()), this, this.options)) : i = e[o], i._$AI(r), o++;
+    for (const r of t) o === e.length ? e.push(i = new L(this.O(O()), this.O(O()), this, this.options)) : i = e[o], i._$AI(r), o++;
     o < e.length && (this._$AR(i && i._$AB.nextSibling, o), e.length = o);
   }
   _$AR(t = this._$AA.nextSibling, e) {
     var i;
     for ((i = this._$AP) == null ? void 0 : i.call(this, !1, !0, e); t !== this._$AB; ) {
-      const o = ht(t).nextSibling;
-      ht(t).remove(), t = o;
+      const o = ut(t).nextSibling;
+      ut(t).remove(), t = o;
     }
   }
   setConnected(t) {
@@ -451,11 +451,11 @@ class q {
   _$AI(t, e = this, i, o) {
     const r = this.strings;
     let n = !1;
-    if (r === void 0) t = k(this, t, e, 0), n = !U(t) || t !== this._$AH && t !== C, n && (this._$AH = t);
+    if (r === void 0) t = C(this, t, e, 0), n = !N(t) || t !== this._$AH && t !== P, n && (this._$AH = t);
     else {
       const l = t;
       let a, d;
-      for (t = r[0], a = 0; a < r.length - 1; a++) d = k(this, l[i + a], e, a), d === C && (d = this._$AH[a]), n || (n = !U(d) || d !== this._$AH[a]), d === h ? t = h : t !== h && (t += (d ?? "") + r[a + 1]), this._$AH[a] = d;
+      for (t = r[0], a = 0; a < r.length - 1; a++) d = C(this, l[i + a], e, a), d === P && (d = this._$AH[a]), n || (n = !N(d) || d !== this._$AH[a]), d === h ? t = h : t !== h && (t += (d ?? "") + r[a + 1]), this._$AH[a] = d;
     }
     n && !o && this.j(t);
   }
@@ -463,7 +463,7 @@ class q {
     t === h ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, t ?? "");
   }
 }
-class Vt extends q {
+class qt extends q {
   constructor() {
     super(...arguments), this.type = 3;
   }
@@ -471,7 +471,7 @@ class Vt extends q {
     this.element[this.name] = t === h ? void 0 : t;
   }
 }
-class qt extends q {
+class Zt extends q {
   constructor() {
     super(...arguments), this.type = 4;
   }
@@ -479,12 +479,12 @@ class qt extends q {
     this.element.toggleAttribute(this.name, !!t && t !== h);
   }
 }
-class Zt extends q {
+class Kt extends q {
   constructor(t, e, i, o, r) {
     super(t, e, i, o, r), this.type = 5;
   }
   _$AI(t, e = this) {
-    if ((t = k(this, t, e, 0) ?? h) === C) return;
+    if ((t = C(this, t, e, 0) ?? h) === P) return;
     const i = this._$AH, o = t === h && i !== h || t.capture !== i.capture || t.once !== i.once || t.passive !== i.passive, r = t !== h && (i === h || o);
     o && this.element.removeEventListener(this.name, this, i), r && this.element.addEventListener(this.name, this, t), this._$AH = t;
   }
@@ -501,17 +501,17 @@ class Jt {
     return this._$AM._$AU;
   }
   _$AI(t) {
-    k(this, t);
+    C(this, t);
   }
 }
-const G = N.litHtmlPolyfillSupport;
-G == null || G(H, F), (N.litHtmlVersions ?? (N.litHtmlVersions = [])).push("3.3.3");
-const Kt = (s, t, e) => {
+const G = U.litHtmlPolyfillSupport;
+G == null || G(R, L), (U.litHtmlVersions ?? (U.litHtmlVersions = [])).push("3.3.3");
+const Gt = (s, t, e) => {
   const i = (e == null ? void 0 : e.renderBefore) ?? t;
   let o = i._$litPart$;
   if (o === void 0) {
     const r = (e == null ? void 0 : e.renderBefore) ?? null;
-    i._$litPart$ = o = new F(t.insertBefore(O(), r), r, void 0, e ?? {});
+    i._$litPart$ = o = new L(t.insertBefore(O(), r), r, void 0, e ?? {});
   }
   return o._$AI(s), o;
 };
@@ -521,7 +521,7 @@ const Kt = (s, t, e) => {
  * SPDX-License-Identifier: BSD-3-Clause
  */
 const v = globalThis;
-class S extends A {
+class x extends S {
   constructor() {
     super(...arguments), this.renderOptions = { host: this }, this._$Do = void 0;
   }
@@ -532,7 +532,7 @@ class S extends A {
   }
   update(t) {
     const e = this.render();
-    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(t), this._$Do = Kt(e, this.renderRoot, this.renderOptions);
+    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(t), this._$Do = Gt(e, this.renderRoot, this.renderOptions);
   }
   connectedCallback() {
     var t;
@@ -543,19 +543,19 @@ class S extends A {
     super.disconnectedCallback(), (t = this._$Do) == null || t.setConnected(!1);
   }
   render() {
-    return C;
+    return P;
   }
 }
-var vt;
-S._$litElement$ = !0, S.finalized = !0, (vt = v.litElementHydrateSupport) == null || vt.call(v, { LitElement: S });
+var yt;
+x._$litElement$ = !0, x.finalized = !0, (yt = v.litElementHydrateSupport) == null || yt.call(v, { LitElement: x });
 const X = v.litElementPolyfillSupport;
-X == null || X({ LitElement: S });
+X == null || X({ LitElement: x });
 (v.litElementVersions ?? (v.litElementVersions = [])).push("4.2.2");
-const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !0, L = !0, D = !0, ft = {
+const Xt = 1, Yt = 2, Q = 4, Qt = 8, E = "medium", Z = "default", H = !0, M = !0, D = !0, I = !0, $t = {
   small: {
     sliderHeight: 150,
     sliderWidth: 14,
-    sliderTouchWidth: 44,
+    sliderTouchWidth: 26,
     buttonSize: 38,
     iconSize: 20,
     padding: 12,
@@ -565,7 +565,7 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
   medium: {
     sliderHeight: 210,
     sliderWidth: 14,
-    sliderTouchWidth: 44,
+    sliderTouchWidth: 28,
     buttonSize: 44,
     iconSize: 22,
     padding: 16,
@@ -575,14 +575,14 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
   large: {
     sliderHeight: 280,
     sliderWidth: 16,
-    sliderTouchWidth: 48,
+    sliderTouchWidth: 30,
     buttonSize: 54,
     iconSize: 26,
     padding: 20,
     gap: 18,
     cardSize: 5
   }
-}, Yt = {
+}, te = {
   entity: "Entidad cover",
   name: "Nombre",
   icon: "Icono junto al nombre",
@@ -600,7 +600,7 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
   open_button_background_color: "Fondo boton subir",
   stop_button_background_color: "Fondo boton parar",
   close_button_background_color: "Fondo boton bajar"
-}, te = [
+}, ee = [
   {
     name: "entity",
     required: !0,
@@ -689,8 +689,8 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
     name: "slider_touch_width",
     selector: {
       number: {
-        min: 28,
-        max: 96,
+        min: 18,
+        max: 72,
         step: 2,
         mode: "slider",
         unit_of_measurement: "px"
@@ -745,12 +745,12 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
       text: {}
     }
   }
-], j = class j extends S {
+], j = class j extends x {
   constructor() {
     super(...arguments), this._isSliding = !1;
   }
   setConfig(t) {
-    const e = et(t);
+    const e = it(t);
     if (!e.entity) {
       this._config = e, this._error = 'Falta la opcion obligatoria "entity" en blind-control-card.';
       return;
@@ -759,7 +759,7 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
   }
   getCardSize() {
     var a, d, u, c;
-    const t = this._getSizeSettings(), e = ((a = this._config) == null ? void 0 : a.show_name) ?? R, i = ((d = this._config) == null ? void 0 : d.show_position) ?? M, o = ((u = this._config) == null ? void 0 : u.show_slider) ?? L, r = ((c = this._config) == null ? void 0 : c.show_buttons) ?? D, n = [
+    const t = this._getSizeSettings(), e = ((a = this._config) == null ? void 0 : a.show_name) ?? H, i = ((d = this._config) == null ? void 0 : d.show_position) ?? M, o = ((u = this._config) == null ? void 0 : u.show_slider) ?? D, r = ((c = this._config) == null ? void 0 : c.show_buttons) ?? I, n = [
       e ? 30 : 0,
       o ? t.sliderHeight + (i ? 22 : 0) : 0,
       r ? t.buttonSize : 0
@@ -781,10 +781,10 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
     t.has("hass") && !this._isSliding && (this._dragPosition = void 0);
   }
   render() {
-    var nt;
+    var at;
     if (this._error)
       return this._renderError(this._error);
-    if (!((nt = this._config) != null && nt.entity))
+    if (!((at = this._config) != null && at.entity))
       return this._renderError("Configura una entidad cover para usar esta tarjeta.");
     if (!this.hass)
       return _`
@@ -799,18 +799,18 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
       return this._renderError(`No existe la entidad "${this._config.entity}".`);
     const e = this._config.name ?? t.attributes.friendly_name ?? this._config.entity, i = this._getCurrentPosition(t), o = this._dragPosition ?? i ?? this._positionFromState(t), r = i !== void 0 || this._dragPosition !== void 0, n = this._isUnavailable(t), l = this._supportsFeature(
       t,
-      kt,
+      Q,
       i !== void 0
-    ), a = this._config.show_name ?? R, d = this._config.show_position ?? M, u = this._config.show_slider ?? L, c = this._config.show_buttons ?? D, p = this._config.card_theme ?? Z, m = this._getSizeSettings(), w = this._getCardStyle(m);
-    return !u && !c ? this._renderError("Activa show_slider o show_buttons para mostrar controles.") : _`
-      <ha-card class=${`theme-${p}`} style=${w}>
+    ), a = !l || n, d = this._config.show_name ?? H, u = this._config.show_position ?? M, c = this._config.show_slider ?? D, p = this._config.show_buttons ?? I, m = this._config.card_theme ?? Z, w = this._getSizeSettings(), zt = this._getCardStyle(w);
+    return !c && !p ? this._renderError("Activa show_slider o show_buttons para mostrar controles.") : _`
+      <ha-card class=${`theme-${m}`} style=${zt}>
         <div class="card-content">
-          ${a ? this._renderTitle(e) : h}
+          ${d ? this._renderTitle(e) : h}
 
-          ${u ? _`
+          ${c ? _`
                 <div class="slider-block">
                   <div
-                    class=${`slider-shell${l && !n ? "" : " disabled"}`}
+                    class=${`slider-shell${a ? " disabled" : ""}`}
                     style=${`--position: ${o};`}
                   >
                     <span class="scale top">100</span>
@@ -819,21 +819,25 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
                       <div class="slider-thumb"></div>
                     </div>
                     <span class="scale bottom">0</span>
-                    <input
-                      class="position-slider"
-                      type="range"
-                      min="0"
-                      max="100"
-                      step="1"
-                      .value=${String(o)}
-                      ?disabled=${!l || n}
+                    <div
+                      class=${`position-slider${a ? " disabled" : ""}`}
+                      role="slider"
+                      tabindex=${a ? "-1" : "0"}
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                      aria-valuenow=${String(o)}
+                      aria-valuetext=${`${o}%`}
+                      aria-disabled=${String(a)}
                       aria-label=${`Posicion de ${e}`}
-                      @input=${this._handleSliderInput}
-                      @change=${this._handlePositionChange}
-                    />
+                      @pointerdown=${this._handleSliderPointerDown}
+                      @pointermove=${this._handleSliderPointerMove}
+                      @pointerup=${this._handleSliderPointerUp}
+                      @pointercancel=${this._handleSliderPointerCancel}
+                      @keydown=${this._handleSliderKeyDown}
+                    ></div>
                   </div>
 
-                  ${d ? _`
+                  ${u ? _`
                         <div class="position-label">
                           ${r ? `${o}%` : this._getStateLabel(t)}
                         </div>
@@ -841,19 +845,19 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
                 </div>
               ` : h}
 
-          ${u && !l && !n ? _`<div class="hint">
+          ${c && !l && !n ? _`<div class="hint">
                 Esta entidad no permite fijar posicion desde Home Assistant.
               </div>` : h}
 
-          ${u && n ? _`<div class="hint">La entidad esta ${t.state}.</div>` : h}
+          ${c && n ? _`<div class="hint">La entidad esta ${t.state}.</div>` : h}
 
-          ${c ? _`
+          ${p ? _`
                 <div class="actions">
                   ${this._renderButton(
       "Subir",
       "mdi:arrow-up-bold",
       "open_cover",
-      n || !this._supportsFeature(t, Gt, !0),
+      n || !this._supportsFeature(t, Xt, !0),
       this._getButtonBackground("open")
     )}
                   ${this._renderButton(
@@ -867,7 +871,7 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
       "Bajar",
       "mdi:arrow-down-bold",
       "close_cover",
-      n || !this._supportsFeature(t, Xt, !0),
+      n || !this._supportsFeature(t, Yt, !0),
       this._getButtonBackground("close")
     )}
                 </div>
@@ -910,13 +914,51 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
       </ha-card>
     `;
   }
-  _handleSliderInput(t) {
+  _handleSliderPointerDown(t) {
+    if (!t.isPrimary || !this._canUseSlider())
+      return;
     const e = t.currentTarget;
-    this._isSliding = !0, this._dragPosition = Number(e.value);
+    this._activePointerId = t.pointerId, this._isSliding = !0, e.setPointerCapture(t.pointerId), this._dragPosition = this._positionFromPointerEvent(t, e), t.preventDefault();
   }
-  _handlePositionChange(t) {
-    const e = t.currentTarget, i = Number(e.value);
-    this._isSliding = !1, this._dragPosition = i, this._callCoverService("set_cover_position", { position: i });
+  _handleSliderPointerMove(t) {
+    if (t.pointerId === this._activePointerId) {
+      if (!this._canUseSlider()) {
+        this._activePointerId = void 0, this._isSliding = !1;
+        return;
+      }
+      this._dragPosition = this._positionFromPointerEvent(
+        t,
+        t.currentTarget
+      ), t.preventDefault();
+    }
+  }
+  _handleSliderPointerUp(t) {
+    if (t.pointerId !== this._activePointerId)
+      return;
+    const e = t.currentTarget;
+    if (!this._canUseSlider()) {
+      this._activePointerId = void 0, this._isSliding = !1, e.releasePointerCapture(t.pointerId);
+      return;
+    }
+    const i = this._positionFromPointerEvent(t, e);
+    this._activePointerId = void 0, this._isSliding = !1, this._dragPosition = i, e.releasePointerCapture(t.pointerId), this._callCoverService("set_cover_position", { position: i }), t.preventDefault();
+  }
+  _handleSliderPointerCancel(t) {
+    t.pointerId === this._activePointerId && (this._activePointerId = void 0, this._isSliding = !1);
+  }
+  _handleSliderKeyDown(t) {
+    if (!this._canUseSlider())
+      return;
+    const e = this._getVisibleSliderPosition(), i = t.shiftKey ? 10 : 5;
+    let o;
+    if (t.key === "ArrowUp" || t.key === "ArrowRight" ? o = e + i : t.key === "ArrowDown" || t.key === "ArrowLeft" ? o = e - i : t.key === "Home" ? o = 0 : t.key === "End" && (o = 100), o === void 0)
+      return;
+    const r = this._clampPosition(o);
+    this._dragPosition = r, this._callCoverService("set_cover_position", { position: r }), t.preventDefault();
+  }
+  _positionFromPointerEvent(t, e) {
+    const i = e.getBoundingClientRect(), o = (i.bottom - t.clientY) / i.height;
+    return this._clampPosition(o * 100);
   }
   async _callCoverService(t, e = {}) {
     var i;
@@ -952,6 +994,24 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
   _isUnavailable(t) {
     return t.state === "unavailable" || t.state === "unknown";
   }
+  _canUseSlider() {
+    var e;
+    if (!this.hass || !((e = this._config) != null && e.entity))
+      return !1;
+    const t = this.hass.states[this._config.entity];
+    return !t || this._isUnavailable(t) ? !1 : this._supportsFeature(
+      t,
+      Q,
+      this._getCurrentPosition(t) !== void 0
+    );
+  }
+  _getVisibleSliderPosition() {
+    var e;
+    if (!this.hass || !((e = this._config) != null && e.entity))
+      return this._dragPosition ?? 0;
+    const t = this.hass.states[this._config.entity];
+    return t ? this._dragPosition ?? this._getCurrentPosition(t) ?? this._positionFromState(t) : this._dragPosition ?? 0;
+  }
   _getIcon() {
     var e, i;
     return ((i = (e = this._config) == null ? void 0 : e.icon) == null ? void 0 : i.trim()) || void 0;
@@ -959,32 +1019,32 @@ const Gt = 1, Xt = 2, kt = 4, Qt = 8, E = "medium", Z = "default", R = !0, M = !
   _getButtonBackground(t) {
     var i, o, r, n;
     const e = t === "open" ? (i = this._config) == null ? void 0 : i.open_button_background_color : t === "stop" ? (o = this._config) == null ? void 0 : o.stop_button_background_color : (r = this._config) == null ? void 0 : r.close_button_background_color;
-    return x(e) ?? x((n = this._config) == null ? void 0 : n.button_background_color);
+    return A(e) ?? A((n = this._config) == null ? void 0 : n.button_background_color);
   }
   _getSizeSettings() {
     var i, o, r, n, l;
-    const t = ((i = this._config) == null ? void 0 : i.size) ?? E, e = ft[t] ?? ft[E];
+    const t = ((i = this._config) == null ? void 0 : i.size) ?? E, e = $t[t] ?? $t[E];
     return {
       ...e,
-      sliderHeight: B(
+      sliderHeight: F(
         (o = this._config) == null ? void 0 : o.slider_height,
         120,
         420,
         e.sliderHeight
       ),
-      sliderWidth: B(
+      sliderWidth: F(
         (r = this._config) == null ? void 0 : r.slider_width,
         8,
         44,
         e.sliderWidth
       ),
-      sliderTouchWidth: B(
+      sliderTouchWidth: F(
         (n = this._config) == null ? void 0 : n.slider_touch_width,
-        28,
-        96,
+        18,
+        72,
         e.sliderTouchWidth
       ),
-      buttonSize: B(
+      buttonSize: F(
         (l = this._config) == null ? void 0 : l.button_size,
         34,
         72,
@@ -1013,7 +1073,7 @@ j.properties = {
   _config: { state: !0 },
   _error: { state: !0 },
   _dragPosition: { state: !0 }
-}, j.styles = wt`
+}, j.styles = St`
     :host {
       display: block;
       color: var(--primary-text-color);
@@ -1140,7 +1200,7 @@ j.properties = {
       top: 14px;
       bottom: 14px;
       left: 50%;
-      width: var(--blind-slider-touch-width, 44px);
+      width: var(--blind-slider-touch-width, 28px);
       height: calc(100% - 28px);
       margin: 0;
       opacity: 0;
@@ -1151,12 +1211,10 @@ j.properties = {
       direction: rtl;
     }
 
-    .position-slider:disabled {
-      cursor: not-allowed;
-    }
-
+    .position-slider.disabled,
     .slider-shell.disabled {
       opacity: 0.55;
+      cursor: not-allowed;
     }
 
     .slider-shell:focus-within .slider-thumb {
@@ -1279,13 +1337,13 @@ j.properties = {
       }
     }
   `;
-let Y = j;
-const V = class V extends S {
+let tt = j;
+const V = class V extends x {
   constructor() {
-    super(...arguments), this._computeLabel = (t) => Yt[t.name] ?? t.name;
+    super(...arguments), this._computeLabel = (t) => te[t.name] ?? t.name;
   }
   setConfig(t) {
-    this._config = et(t);
+    this._config = it(t);
   }
   render() {
     return _`
@@ -1293,7 +1351,7 @@ const V = class V extends S {
         <ha-form
           .hass=${this.hass}
           .data=${this._getEditorData()}
-          .schema=${te}
+          .schema=${ee}
           .computeLabel=${this._computeLabel}
           @value-changed=${this._handleValueChanged}
         ></ha-form>
@@ -1305,20 +1363,20 @@ const V = class V extends S {
       type: "custom:blind-control-card",
       size: E,
       card_theme: Z,
-      show_name: R,
+      show_name: H,
       show_position: M,
-      show_slider: L,
-      show_buttons: D,
+      show_slider: D,
+      show_buttons: I,
       ...this._config
     };
   }
   _handleValueChanged(t) {
-    const e = t.detail.value, i = ee({
+    const e = t.detail.value, i = ie({
       ...this._config,
       ...e,
       type: "custom:blind-control-card"
     });
-    this._config = et(i), this.dispatchEvent(
+    this._config = it(i), this.dispatchEvent(
       new CustomEvent("config-changed", {
         detail: { config: i },
         bubbles: !0,
@@ -1330,35 +1388,35 @@ const V = class V extends S {
 V.properties = {
   hass: { attribute: !1 },
   _config: { state: !0 }
-}, V.styles = wt`
+}, V.styles = St`
     .editor {
       display: block;
     }
   `;
-let tt = V;
-function et(s) {
-  const t = Pt(s.size) ? s.size : E, e = Tt(s.card_theme) ? s.card_theme : Z;
+let et = V;
+function it(s) {
+  const t = kt(s.size) ? s.size : E, e = Tt(s.card_theme) ? s.card_theme : Z;
   return {
     ...s,
     type: s.type || "custom:blind-control-card",
     size: t,
     card_theme: e,
-    show_name: s.show_name ?? R,
+    show_name: s.show_name ?? H,
     show_position: s.show_position ?? M,
-    show_slider: s.show_slider ?? L,
-    show_buttons: s.show_buttons ?? D
+    show_slider: s.show_slider ?? D,
+    show_buttons: s.show_buttons ?? I
   };
 }
-function ee(s) {
+function ie(s) {
   const t = {
     ...s,
     type: "custom:blind-control-card"
   };
-  typeof t.name == "string" && (t.name = t.name.trim()), typeof t.icon == "string" && (t.icon = t.icon.trim()), t.name || delete t.name, t.icon || delete t.icon, t.entity || delete t.entity, (!Pt(t.size) || t.size === E) && delete t.size, (!Tt(t.card_theme) || t.card_theme === Z) && delete t.card_theme, t.show_name === R && delete t.show_name, t.show_position === M && delete t.show_position, t.show_slider === L && delete t.show_slider, t.show_buttons === D && delete t.show_buttons;
-  const e = T(t.slider_height, 120, 420), i = T(t.slider_width, 8, 44), o = T(t.slider_touch_width, 28, 96), r = T(t.button_size, 34, 72);
-  return e === void 0 ? delete t.slider_height : t.slider_height = e, i === void 0 ? delete t.slider_width : t.slider_width = i, o === void 0 ? delete t.slider_touch_width : t.slider_touch_width = o, r === void 0 ? delete t.button_size : t.button_size = r, t.button_background_color = x(t.button_background_color), t.open_button_background_color = x(t.open_button_background_color), t.stop_button_background_color = x(t.stop_button_background_color), t.close_button_background_color = x(t.close_button_background_color), t.button_background_color || delete t.button_background_color, t.open_button_background_color || delete t.open_button_background_color, t.stop_button_background_color || delete t.stop_button_background_color, t.close_button_background_color || delete t.close_button_background_color, t;
+  typeof t.name == "string" && (t.name = t.name.trim()), typeof t.icon == "string" && (t.icon = t.icon.trim()), t.name || delete t.name, t.icon || delete t.icon, t.entity || delete t.entity, (!kt(t.size) || t.size === E) && delete t.size, (!Tt(t.card_theme) || t.card_theme === Z) && delete t.card_theme, t.show_name === H && delete t.show_name, t.show_position === M && delete t.show_position, t.show_slider === D && delete t.show_slider, t.show_buttons === I && delete t.show_buttons;
+  const e = T(t.slider_height, 120, 420), i = T(t.slider_width, 8, 44), o = T(t.slider_touch_width, 18, 72), r = T(t.button_size, 34, 72);
+  return e === void 0 ? delete t.slider_height : t.slider_height = e, i === void 0 ? delete t.slider_width : t.slider_width = i, o === void 0 ? delete t.slider_touch_width : t.slider_touch_width = o, r === void 0 ? delete t.button_size : t.button_size = r, t.button_background_color = A(t.button_background_color), t.open_button_background_color = A(t.open_button_background_color), t.stop_button_background_color = A(t.stop_button_background_color), t.close_button_background_color = A(t.close_button_background_color), t.button_background_color || delete t.button_background_color, t.open_button_background_color || delete t.open_button_background_color, t.stop_button_background_color || delete t.stop_button_background_color, t.close_button_background_color || delete t.close_button_background_color, t;
 }
-function Pt(s) {
+function kt(s) {
   return s === "small" || s === "medium" || s === "large";
 }
 function Tt(s) {
@@ -1369,17 +1427,17 @@ function T(s, t, e) {
   if (Number.isFinite(i))
     return Math.min(e, Math.max(t, Math.round(i)));
 }
-function B(s, t, e, i) {
+function F(s, t, e, i) {
   return T(s, t, e) ?? i;
 }
-function x(s) {
+function A(s) {
   if (typeof s != "string")
     return;
   const t = s.trim();
   if (!(!t || /[;{}]/.test(t)))
     return t;
 }
-function ie(s, t) {
+function oe(s, t) {
   if (t.split(".")[0] !== "cover")
     return null;
   const e = s.states[t], i = [
@@ -1392,7 +1450,7 @@ function ie(s, t) {
       }
     }
   ];
-  return (!e || oe(e)) && i.push({
+  return (!e || se(e)) && i.push({
     label: "Solo slider",
     config: {
       type: "custom:blind-control-card",
@@ -1410,26 +1468,26 @@ function ie(s, t) {
     }
   }), i;
 }
-function oe(s) {
+function se(s) {
   const t = s.attributes.supported_features, e = typeof t == "number" ? t : Number(t);
-  return Number.isFinite(e) ? (e & kt) !== 0 : s.attributes.current_position !== void 0;
+  return Number.isFinite(e) ? (e & Q) !== 0 : s.attributes.current_position !== void 0;
 }
-customElements.get("blind-control-card") || customElements.define("blind-control-card", Y);
-customElements.get("blind-control-card-editor") || customElements.define("blind-control-card-editor", tt);
+customElements.get("blind-control-card") || customElements.define("blind-control-card", tt);
+customElements.get("blind-control-card-editor") || customElements.define("blind-control-card-editor", et);
 window.customCards = window.customCards ?? [];
-const it = {
+const ot = {
   type: "blind-control-card",
   name: "Blind Control Card",
   description: "Control responsive para persianas y covers Shelly.",
   preview: !0,
   documentationURL: "https://developers.home-assistant.io/docs/frontend/custom-ui/custom-card/#suggesting-your-card-for-an-entity",
-  getEntitySuggestion: ie
-}, $t = window.customCards.find(
-  (s) => s.type === it.type
+  getEntitySuggestion: oe
+}, vt = window.customCards.find(
+  (s) => s.type === ot.type
 );
-$t ? Object.assign($t, it) : window.customCards.push(it);
+vt ? Object.assign(vt, ot) : window.customCards.push(ot);
 window.__BLIND_CONTROL_CARD_VERSION__ || (console.info(
-  "%cBLIND-CONTROL-CARD%c 0.5.0 loaded",
+  "%cBLIND-CONTROL-CARD%c 0.6.0 loaded",
   "color: var(--primary-color); font-weight: 700;",
   "color: inherit;"
-), window.__BLIND_CONTROL_CARD_VERSION__ = "0.5.0");
+), window.__BLIND_CONTROL_CARD_VERSION__ = "0.6.0");
