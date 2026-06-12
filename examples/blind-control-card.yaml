@@ -1,3 +1,6 @@
 type: custom:blind-control-card
 entity: cover.persiana_salon
 name: Persiana Salon
+size: small
+slider_height: 160
+button_size: 38

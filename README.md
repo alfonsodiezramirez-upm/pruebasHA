@@ -8,6 +8,7 @@ Custom card de Lovelace para controlar entidades `cover` de Home Assistant, pens
 type: custom:blind-control-card
 entity: cover.persiana_salon
 name: Persiana Salon
+size: medium
 ```
 
 `name` es opcional. Si no se indica, la tarjeta usa `friendly_name` y, como ultimo recurso, el `entity_id`.
@@ -17,7 +18,10 @@ name: Persiana Salon
 - Web Component con Lit y TypeScript.
 - Contenedor `ha-card`.
 - Barra vertical de posicion de 0 a 100 usando `current_position`.
-- Botones `Subir`, `Parar` y `Bajar`.
+- Botones compactos por icono para subir, parar y bajar.
+- Editor visual para configurar la tarjeta desde la UI de Lovelace.
+- Tamano configurable con `size`, `slider_height` y `button_size`.
+- Compatible con entidades `cover` de Shelly 2PM Gen4 cuando el dispositivo esta configurado en Home Assistant como cubierta/persiana.
 - Servicios usados:
   - `cover.open_cover`
   - `cover.stop_cover`
@@ -25,6 +29,7 @@ name: Persiana Salon
   - `cover.set_cover_position` con `position`
 - Mensajes claros si falta `entity` o si la entidad no existe.
 - Estilos basados en variables de tema de Home Assistant.
+- Respeta `supported_features` para desactivar controles no soportados por la entidad.
 
 ## Desarrollo
 
@@ -64,6 +69,7 @@ dist/blind-control-card.js
    type: custom:blind-control-card
    entity: cover.persiana_salon
    name: Persiana Salon
+   size: small
    ```
 
 ## Instalacion con HACS
@@ -87,7 +93,27 @@ dist/blind-control-card.js
 | --- | --- | --- | --- |
 | `entity` | string | Si | Entidad `cover` que se va a controlar. |
 | `name` | string | No | Nombre mostrado en la parte superior. |
+| `size` | `small`, `medium`, `large` | No | Tamano base de la tarjeta. Por defecto: `medium`. |
+| `slider_height` | number | No | Altura personalizada de la barra en pixeles, entre `120` y `420`. |
+| `button_size` | number | No | Tamano personalizado de los botones en pixeles, entre `34` y `72`. |
+| `show_name` | boolean | No | Muestra u oculta el nombre. Por defecto: `true`. |
+| `show_position` | boolean | No | Muestra u oculta el porcentaje/estado. Por defecto: `true`. |
+
+## Ejemplo compacto
+
+```yaml
+type: custom:blind-control-card
+entity: cover.shelly_2pm_gen4_persiana
+name: Salon
+size: small
+slider_height: 160
+button_size: 38
+```
+
+## Shelly 2PM Gen4
+
+Para usar Shelly 2PM Gen4, configura el dispositivo en Home Assistant con perfil de cubierta/persiana para que exponga una entidad `cover`. La tarjeta usa los servicios estandar de `cover`, por lo que no llama a APIs propias de Shelly ni necesita credenciales adicionales.
 
 ## Notas
 
-La barra de posicion necesita que la entidad exponga `current_position`. Si no existe ese atributo, la tarjeta sigue mostrando los botones de subir, parar y bajar, pero desactiva la barra.
+La barra de posicion lee `current_position`. Si la entidad no soporta `set_cover_position`, la tarjeta mantiene los botones disponibles y desactiva solo la barra.

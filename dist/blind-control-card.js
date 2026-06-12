@@ -3,18 +3,18 @@
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const M = globalThis, V = M.ShadowRoot && (M.ShadyCSS === void 0 || M.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, q = Symbol(), Z = /* @__PURE__ */ new WeakMap();
-let ot = class {
+const R = globalThis, Q = R.ShadowRoot && (R.ShadyCSS === void 0 || R.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, X = Symbol(), tt = /* @__PURE__ */ new WeakMap();
+let _t = class {
   constructor(t, e, i) {
-    if (this._$cssResult$ = !0, i !== q) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
+    if (this._$cssResult$ = !0, i !== X) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
     this.cssText = t, this.t = e;
   }
   get styleSheet() {
     let t = this.o;
     const e = this.t;
-    if (V && t === void 0) {
+    if (Q && t === void 0) {
       const i = e !== void 0 && e.length === 1;
-      i && (t = Z.get(e)), t === void 0 && ((this.o = t = new CSSStyleSheet()).replaceSync(this.cssText), i && Z.set(e, t));
+      i && (t = tt.get(e)), t === void 0 && ((this.o = t = new CSSStyleSheet()).replaceSync(this.cssText), i && tt.set(e, t));
     }
     return t;
   }
@@ -22,33 +22,33 @@ let ot = class {
     return this.cssText;
   }
 };
-const dt = (r) => new ot(typeof r == "string" ? r : r + "", void 0, q), pt = (r, ...t) => {
+const At = (r) => new _t(typeof r == "string" ? r : r + "", void 0, X), mt = (r, ...t) => {
   const e = r.length === 1 ? r[0] : t.reduce((i, s, n) => i + ((o) => {
     if (o._$cssResult$ === !0) return o.cssText;
     if (typeof o == "number") return o;
     throw Error("Value passed to 'css' function must be a 'css' function result: " + o + ". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.");
   })(s) + r[n + 1], r[0]);
-  return new ot(e, r, q);
-}, ut = (r, t) => {
-  if (V) r.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
+  return new _t(e, r, X);
+}, St = (r, t) => {
+  if (Q) r.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
   else for (const e of t) {
-    const i = document.createElement("style"), s = M.litNonce;
+    const i = document.createElement("style"), s = R.litNonce;
     s !== void 0 && i.setAttribute("nonce", s), i.textContent = e.cssText, r.appendChild(i);
   }
-}, J = V ? (r) => r : (r) => r instanceof CSSStyleSheet ? ((t) => {
+}, et = Q ? (r) => r : (r) => r instanceof CSSStyleSheet ? ((t) => {
   let e = "";
   for (const i of t.cssRules) e += i.cssText;
-  return dt(e);
+  return At(e);
 })(r) : r;
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const { is: $t, defineProperty: _t, getOwnPropertyDescriptor: ft, getOwnPropertyNames: mt, getOwnPropertySymbols: gt, getPrototypeOf: vt } = Object, f = globalThis, K = f.trustedTypes, yt = K ? K.emptyScript : "", z = f.reactiveElementPolyfillSupport, S = (r, t) => r, I = { toAttribute(r, t) {
+const { is: wt, defineProperty: xt, getOwnPropertyDescriptor: Et, getOwnPropertyNames: Ct, getOwnPropertySymbols: Pt, getPrototypeOf: zt } = Object, f = globalThis, it = f.trustedTypes, Nt = it ? it.emptyScript : "", j = f.reactiveElementPolyfillSupport, P = (r, t) => r, q = { toAttribute(r, t) {
   switch (t) {
     case Boolean:
-      r = r ? yt : null;
+      r = r ? Nt : null;
       break;
     case Object:
     case Array:
@@ -73,44 +73,44 @@ const { is: $t, defineProperty: _t, getOwnPropertyDescriptor: ft, getOwnProperty
       }
   }
   return e;
-} }, nt = (r, t) => !$t(r, t), G = { attribute: !0, type: String, converter: I, reflect: !1, useDefault: !1, hasChanged: nt };
+} }, gt = (r, t) => !wt(r, t), st = { attribute: !0, type: String, converter: q, reflect: !1, useDefault: !1, hasChanged: gt };
 Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), f.litPropertyMetadata ?? (f.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
-let b = class extends HTMLElement {
+let A = class extends HTMLElement {
   static addInitializer(t) {
     this._$Ei(), (this.l ?? (this.l = [])).push(t);
   }
   static get observedAttributes() {
     return this.finalize(), this._$Eh && [...this._$Eh.keys()];
   }
-  static createProperty(t, e = G) {
+  static createProperty(t, e = st) {
     if (e.state && (e.attribute = !1), this._$Ei(), this.prototype.hasOwnProperty(t) && ((e = Object.create(e)).wrapped = !0), this.elementProperties.set(t, e), !e.noAccessor) {
       const i = Symbol(), s = this.getPropertyDescriptor(t, i, e);
-      s !== void 0 && _t(this.prototype, t, s);
+      s !== void 0 && xt(this.prototype, t, s);
     }
   }
   static getPropertyDescriptor(t, e, i) {
-    const { get: s, set: n } = ft(this.prototype, t) ?? { get() {
+    const { get: s, set: n } = Et(this.prototype, t) ?? { get() {
       return this[e];
     }, set(o) {
       this[e] = o;
     } };
     return { get: s, set(o) {
-      const h = s == null ? void 0 : s.call(this);
-      n == null || n.call(this, o), this.requestUpdate(t, h, i);
+      const l = s == null ? void 0 : s.call(this);
+      n == null || n.call(this, o), this.requestUpdate(t, l, i);
     }, configurable: !0, enumerable: !0 };
   }
   static getPropertyOptions(t) {
-    return this.elementProperties.get(t) ?? G;
+    return this.elementProperties.get(t) ?? st;
   }
   static _$Ei() {
-    if (this.hasOwnProperty(S("elementProperties"))) return;
-    const t = vt(this);
+    if (this.hasOwnProperty(P("elementProperties"))) return;
+    const t = zt(this);
     t.finalize(), t.l !== void 0 && (this.l = [...t.l]), this.elementProperties = new Map(t.elementProperties);
   }
   static finalize() {
-    if (this.hasOwnProperty(S("finalized"))) return;
-    if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(S("properties"))) {
-      const e = this.properties, i = [...mt(e), ...gt(e)];
+    if (this.hasOwnProperty(P("finalized"))) return;
+    if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(P("properties"))) {
+      const e = this.properties, i = [...Ct(e), ...Pt(e)];
       for (const s of i) this.createProperty(s, e[s]);
     }
     const t = this[Symbol.metadata];
@@ -129,8 +129,8 @@ let b = class extends HTMLElement {
     const e = [];
     if (Array.isArray(t)) {
       const i = new Set(t.flat(1 / 0).reverse());
-      for (const s of i) e.unshift(J(s));
-    } else t !== void 0 && e.push(J(t));
+      for (const s of i) e.unshift(et(s));
+    } else t !== void 0 && e.push(et(t));
     return e;
   }
   static _$Eu(t, e) {
@@ -159,7 +159,7 @@ let b = class extends HTMLElement {
   }
   createRenderRoot() {
     const t = this.shadowRoot ?? this.attachShadow(this.constructor.shadowRootOptions);
-    return ut(t, this.constructor.elementStyles), t;
+    return St(t, this.constructor.elementStyles), t;
   }
   connectedCallback() {
     var t;
@@ -184,7 +184,7 @@ let b = class extends HTMLElement {
     var n;
     const i = this.constructor.elementProperties.get(t), s = this.constructor._$Eu(t, i);
     if (s !== void 0 && i.reflect === !0) {
-      const o = (((n = i.converter) == null ? void 0 : n.toAttribute) !== void 0 ? i.converter : I).toAttribute(e, i.type);
+      const o = (((n = i.converter) == null ? void 0 : n.toAttribute) !== void 0 ? i.converter : q).toAttribute(e, i.type);
       this._$Em = t, o == null ? this.removeAttribute(s) : this.setAttribute(s, o), this._$Em = null;
     }
   }
@@ -192,17 +192,17 @@ let b = class extends HTMLElement {
     var n, o;
     const i = this.constructor, s = i._$Eh.get(t);
     if (s !== void 0 && this._$Em !== s) {
-      const h = i.getPropertyOptions(s), a = typeof h.converter == "function" ? { fromAttribute: h.converter } : ((n = h.converter) == null ? void 0 : n.fromAttribute) !== void 0 ? h.converter : I;
+      const l = i.getPropertyOptions(s), a = typeof l.converter == "function" ? { fromAttribute: l.converter } : ((n = l.converter) == null ? void 0 : n.fromAttribute) !== void 0 ? l.converter : q;
       this._$Em = s;
-      const c = a.fromAttribute(e, h.type);
-      this[s] = c ?? ((o = this._$Ej) == null ? void 0 : o.get(s)) ?? c, this._$Em = null;
+      const h = a.fromAttribute(e, l.type);
+      this[s] = h ?? ((o = this._$Ej) == null ? void 0 : o.get(s)) ?? h, this._$Em = null;
     }
   }
   requestUpdate(t, e, i, s = !1, n) {
     var o;
     if (t !== void 0) {
-      const h = this.constructor;
-      if (s === !1 && (n = this[t]), i ?? (i = h.getPropertyOptions(t)), !((i.hasChanged ?? nt)(n, e) || i.useDefault && i.reflect && n === ((o = this._$Ej) == null ? void 0 : o.get(t)) && !this.hasAttribute(h._$Eu(t, i)))) return;
+      const l = this.constructor;
+      if (s === !1 && (n = this[t]), i ?? (i = l.getPropertyOptions(t)), !((i.hasChanged ?? gt)(n, e) || i.useDefault && i.reflect && n === ((o = this._$Ej) == null ? void 0 : o.get(t)) && !this.hasAttribute(l._$Eu(t, i)))) return;
       this.C(t, e, i);
     }
     this.isUpdatePending === !1 && (this._$ES = this._$EP());
@@ -233,8 +233,8 @@ let b = class extends HTMLElement {
       }
       const s = this.constructor.elementProperties;
       if (s.size > 0) for (const [n, o] of s) {
-        const { wrapped: h } = o, a = this[n];
-        h !== !0 || this._$AL.has(n) || a === void 0 || this.C(n, void 0, o, a);
+        const { wrapped: l } = o, a = this[n];
+        l !== !0 || this._$AL.has(n) || a === void 0 || this.C(n, void 0, o, a);
       }
     }
     let t = !1;
@@ -278,59 +278,59 @@ let b = class extends HTMLElement {
   firstUpdated(t) {
   }
 };
-b.elementStyles = [], b.shadowRootOptions = { mode: "open" }, b[S("elementProperties")] = /* @__PURE__ */ new Map(), b[S("finalized")] = /* @__PURE__ */ new Map(), z == null || z({ ReactiveElement: b }), (f.reactiveElementVersions ?? (f.reactiveElementVersions = [])).push("2.1.2");
+A.elementStyles = [], A.shadowRootOptions = { mode: "open" }, A[P("elementProperties")] = /* @__PURE__ */ new Map(), A[P("finalized")] = /* @__PURE__ */ new Map(), j == null || j({ ReactiveElement: A }), (f.reactiveElementVersions ?? (f.reactiveElementVersions = [])).push("2.1.2");
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const C = globalThis, Q = (r) => r, T = C.trustedTypes, X = T ? T.createPolicy("lit-html", { createHTML: (r) => r }) : void 0, at = "$lit$", _ = `lit$${Math.random().toFixed(9).slice(2)}$`, ht = "?" + _, bt = `<${ht}>`, y = document, U = () => y.createComment(""), k = (r) => r === null || typeof r != "object" && typeof r != "function", F = Array.isArray, At = (r) => F(r) || typeof (r == null ? void 0 : r[Symbol.iterator]) == "function", D = `[ 	
-\f\r]`, w = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, Y = /-->/g, tt = />/g, m = RegExp(`>|${D}(?:([^\\s"'>=/]+)(${D}*=${D}*(?:[^ 	
-\f\r"'\`<>=]|("|')|))|$)`, "g"), et = /'/g, it = /"/g, lt = /^(?:script|style|textarea|title)$/i, xt = (r) => (t, ...e) => ({ _$litType$: r, strings: t, values: e }), E = xt(1), A = Symbol.for("lit-noChange"), d = Symbol.for("lit-nothing"), st = /* @__PURE__ */ new WeakMap(), g = y.createTreeWalker(y, 129);
-function ct(r, t) {
-  if (!F(r) || !r.hasOwnProperty("raw")) throw Error("invalid template strings array");
-  return X !== void 0 ? X.createHTML(t) : t;
+const z = globalThis, rt = (r) => r, L = z.trustedTypes, ot = L ? L.createPolicy("lit-html", { createHTML: (r) => r }) : void 0, ft = "$lit$", g = `lit$${Math.random().toFixed(9).slice(2)}$`, $t = "?" + g, Tt = `<${$t}>`, y = document, N = () => y.createComment(""), T = (r) => r === null || typeof r != "object" && typeof r != "function", Y = Array.isArray, Ut = (r) => Y(r) || typeof (r == null ? void 0 : r[Symbol.iterator]) == "function", V = `[ 	
+\f\r]`, C = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, nt = /-->/g, at = />/g, $ = RegExp(`>|${V}(?:([^\\s"'>=/]+)(${V}*=${V}*(?:[^ 	
+\f\r"'\`<>=]|("|')|))|$)`, "g"), lt = /'/g, ct = /"/g, bt = /^(?:script|style|textarea|title)$/i, Ht = (r) => (t, ...e) => ({ _$litType$: r, strings: t, values: e }), _ = Ht(1), x = Symbol.for("lit-noChange"), d = Symbol.for("lit-nothing"), ht = /* @__PURE__ */ new WeakMap(), b = y.createTreeWalker(y, 129);
+function vt(r, t) {
+  if (!Y(r) || !r.hasOwnProperty("raw")) throw Error("invalid template strings array");
+  return ot !== void 0 ? ot.createHTML(t) : t;
 }
-const wt = (r, t) => {
+const Ot = (r, t) => {
   const e = r.length - 1, i = [];
-  let s, n = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", o = w;
-  for (let h = 0; h < e; h++) {
-    const a = r[h];
-    let c, p, l = -1, u = 0;
-    for (; u < a.length && (o.lastIndex = u, p = o.exec(a), p !== null); ) u = o.lastIndex, o === w ? p[1] === "!--" ? o = Y : p[1] !== void 0 ? o = tt : p[2] !== void 0 ? (lt.test(p[2]) && (s = RegExp("</" + p[2], "g")), o = m) : p[3] !== void 0 && (o = m) : o === m ? p[0] === ">" ? (o = s ?? w, l = -1) : p[1] === void 0 ? l = -2 : (l = o.lastIndex - p[2].length, c = p[1], o = p[3] === void 0 ? m : p[3] === '"' ? it : et) : o === it || o === et ? o = m : o === Y || o === tt ? o = w : (o = m, s = void 0);
-    const $ = o === m && r[h + 1].startsWith("/>") ? " " : "";
-    n += o === w ? a + bt : l >= 0 ? (i.push(c), a.slice(0, l) + at + a.slice(l) + _ + $) : a + _ + (l === -2 ? h : $);
+  let s, n = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", o = C;
+  for (let l = 0; l < e; l++) {
+    const a = r[l];
+    let h, p, c = -1, u = 0;
+    for (; u < a.length && (o.lastIndex = u, p = o.exec(a), p !== null); ) u = o.lastIndex, o === C ? p[1] === "!--" ? o = nt : p[1] !== void 0 ? o = at : p[2] !== void 0 ? (bt.test(p[2]) && (s = RegExp("</" + p[2], "g")), o = $) : p[3] !== void 0 && (o = $) : o === $ ? p[0] === ">" ? (o = s ?? C, c = -1) : p[1] === void 0 ? c = -2 : (c = o.lastIndex - p[2].length, h = p[1], o = p[3] === void 0 ? $ : p[3] === '"' ? ct : lt) : o === ct || o === lt ? o = $ : o === nt || o === at ? o = C : (o = $, s = void 0);
+    const m = o === $ && r[l + 1].startsWith("/>") ? " " : "";
+    n += o === C ? a + Tt : c >= 0 ? (i.push(h), a.slice(0, c) + ft + a.slice(c) + g + m) : a + g + (c === -2 ? l : m);
   }
-  return [ct(r, n + (r[e] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), i];
+  return [vt(r, n + (r[e] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), i];
 };
-class N {
+class U {
   constructor({ strings: t, _$litType$: e }, i) {
     let s;
     this.parts = [];
     let n = 0, o = 0;
-    const h = t.length - 1, a = this.parts, [c, p] = wt(t, e);
-    if (this.el = N.createElement(c, i), g.currentNode = this.el.content, e === 2 || e === 3) {
-      const l = this.el.content.firstChild;
-      l.replaceWith(...l.childNodes);
+    const l = t.length - 1, a = this.parts, [h, p] = Ot(t, e);
+    if (this.el = U.createElement(h, i), b.currentNode = this.el.content, e === 2 || e === 3) {
+      const c = this.el.content.firstChild;
+      c.replaceWith(...c.childNodes);
     }
-    for (; (s = g.nextNode()) !== null && a.length < h; ) {
+    for (; (s = b.nextNode()) !== null && a.length < l; ) {
       if (s.nodeType === 1) {
-        if (s.hasAttributes()) for (const l of s.getAttributeNames()) if (l.endsWith(at)) {
-          const u = p[o++], $ = s.getAttribute(l).split(_), H = /([.?@])?(.*)/.exec(u);
-          a.push({ type: 1, index: n, name: H[2], strings: $, ctor: H[1] === "." ? St : H[1] === "?" ? Ct : H[1] === "@" ? Pt : j }), s.removeAttribute(l);
-        } else l.startsWith(_) && (a.push({ type: 6, index: n }), s.removeAttribute(l));
-        if (lt.test(s.tagName)) {
-          const l = s.textContent.split(_), u = l.length - 1;
+        if (s.hasAttributes()) for (const c of s.getAttributeNames()) if (c.endsWith(ft)) {
+          const u = p[o++], m = s.getAttribute(c).split(g), k = /([.?@])?(.*)/.exec(u);
+          a.push({ type: 1, index: n, name: k[2], strings: m, ctor: k[1] === "." ? kt : k[1] === "?" ? Rt : k[1] === "@" ? Lt : F }), s.removeAttribute(c);
+        } else c.startsWith(g) && (a.push({ type: 6, index: n }), s.removeAttribute(c));
+        if (bt.test(s.tagName)) {
+          const c = s.textContent.split(g), u = c.length - 1;
           if (u > 0) {
-            s.textContent = T ? T.emptyScript : "";
-            for (let $ = 0; $ < u; $++) s.append(l[$], U()), g.nextNode(), a.push({ type: 2, index: ++n });
-            s.append(l[u], U());
+            s.textContent = L ? L.emptyScript : "";
+            for (let m = 0; m < u; m++) s.append(c[m], N()), b.nextNode(), a.push({ type: 2, index: ++n });
+            s.append(c[u], N());
           }
         }
-      } else if (s.nodeType === 8) if (s.data === ht) a.push({ type: 2, index: n });
+      } else if (s.nodeType === 8) if (s.data === $t) a.push({ type: 2, index: n });
       else {
-        let l = -1;
-        for (; (l = s.data.indexOf(_, l + 1)) !== -1; ) a.push({ type: 7, index: n }), l += _.length - 1;
+        let c = -1;
+        for (; (c = s.data.indexOf(g, c + 1)) !== -1; ) a.push({ type: 7, index: n }), c += g.length - 1;
       }
       n++;
     }
@@ -340,14 +340,14 @@ class N {
     return i.innerHTML = t, i;
   }
 }
-function x(r, t, e = r, i) {
-  var o, h;
-  if (t === A) return t;
+function E(r, t, e = r, i) {
+  var o, l;
+  if (t === x) return t;
   let s = i !== void 0 ? (o = e._$Co) == null ? void 0 : o[i] : e._$Cl;
-  const n = k(t) ? void 0 : t._$litDirective$;
-  return (s == null ? void 0 : s.constructor) !== n && ((h = s == null ? void 0 : s._$AO) == null || h.call(s, !1), n === void 0 ? s = void 0 : (s = new n(r), s._$AT(r, e, i)), i !== void 0 ? (e._$Co ?? (e._$Co = []))[i] = s : e._$Cl = s), s !== void 0 && (t = x(r, s._$AS(r, t.values), s, i)), t;
+  const n = T(t) ? void 0 : t._$litDirective$;
+  return (s == null ? void 0 : s.constructor) !== n && ((l = s == null ? void 0 : s._$AO) == null || l.call(s, !1), n === void 0 ? s = void 0 : (s = new n(r), s._$AT(r, e, i)), i !== void 0 ? (e._$Co ?? (e._$Co = []))[i] = s : e._$Cl = s), s !== void 0 && (t = E(r, s._$AS(r, t.values), s, i)), t;
 }
-class Et {
+class Mt {
   constructor(t, e) {
     this._$AV = [], this._$AN = void 0, this._$AD = t, this._$AM = e;
   }
@@ -359,23 +359,23 @@ class Et {
   }
   u(t) {
     const { el: { content: e }, parts: i } = this._$AD, s = ((t == null ? void 0 : t.creationScope) ?? y).importNode(e, !0);
-    g.currentNode = s;
-    let n = g.nextNode(), o = 0, h = 0, a = i[0];
+    b.currentNode = s;
+    let n = b.nextNode(), o = 0, l = 0, a = i[0];
     for (; a !== void 0; ) {
       if (o === a.index) {
-        let c;
-        a.type === 2 ? c = new O(n, n.nextSibling, this, t) : a.type === 1 ? c = new a.ctor(n, a.name, a.strings, this, t) : a.type === 6 && (c = new Ut(n, this, t)), this._$AV.push(c), a = i[++h];
+        let h;
+        a.type === 2 ? h = new M(n, n.nextSibling, this, t) : a.type === 1 ? h = new a.ctor(n, a.name, a.strings, this, t) : a.type === 6 && (h = new Dt(n, this, t)), this._$AV.push(h), a = i[++l];
       }
-      o !== (a == null ? void 0 : a.index) && (n = g.nextNode(), o++);
+      o !== (a == null ? void 0 : a.index) && (n = b.nextNode(), o++);
     }
-    return g.currentNode = y, s;
+    return b.currentNode = y, s;
   }
   p(t) {
     let e = 0;
     for (const i of this._$AV) i !== void 0 && (i.strings !== void 0 ? (i._$AI(t, i, e), e += i.strings.length - 2) : i._$AI(t[e])), e++;
   }
 }
-class O {
+class M {
   get _$AU() {
     var t;
     return ((t = this._$AM) == null ? void 0 : t._$AU) ?? this._$Cv;
@@ -395,7 +395,7 @@ class O {
     return this._$AB;
   }
   _$AI(t, e = this) {
-    t = x(this, t, e), k(t) ? t === d || t == null || t === "" ? (this._$AH !== d && this._$AR(), this._$AH = d) : t !== this._$AH && t !== A && this._(t) : t._$litType$ !== void 0 ? this.$(t) : t.nodeType !== void 0 ? this.T(t) : At(t) ? this.k(t) : this._(t);
+    t = E(this, t, e), T(t) ? t === d || t == null || t === "" ? (this._$AH !== d && this._$AR(), this._$AH = d) : t !== this._$AH && t !== x && this._(t) : t._$litType$ !== void 0 ? this.$(t) : t.nodeType !== void 0 ? this.T(t) : Ut(t) ? this.k(t) : this._(t);
   }
   O(t) {
     return this._$AA.parentNode.insertBefore(t, this._$AB);
@@ -404,33 +404,33 @@ class O {
     this._$AH !== t && (this._$AR(), this._$AH = this.O(t));
   }
   _(t) {
-    this._$AH !== d && k(this._$AH) ? this._$AA.nextSibling.data = t : this.T(y.createTextNode(t)), this._$AH = t;
+    this._$AH !== d && T(this._$AH) ? this._$AA.nextSibling.data = t : this.T(y.createTextNode(t)), this._$AH = t;
   }
   $(t) {
     var n;
-    const { values: e, _$litType$: i } = t, s = typeof i == "number" ? this._$AC(t) : (i.el === void 0 && (i.el = N.createElement(ct(i.h, i.h[0]), this.options)), i);
+    const { values: e, _$litType$: i } = t, s = typeof i == "number" ? this._$AC(t) : (i.el === void 0 && (i.el = U.createElement(vt(i.h, i.h[0]), this.options)), i);
     if (((n = this._$AH) == null ? void 0 : n._$AD) === s) this._$AH.p(e);
     else {
-      const o = new Et(s, this), h = o.u(this.options);
-      o.p(e), this.T(h), this._$AH = o;
+      const o = new Mt(s, this), l = o.u(this.options);
+      o.p(e), this.T(l), this._$AH = o;
     }
   }
   _$AC(t) {
-    let e = st.get(t.strings);
-    return e === void 0 && st.set(t.strings, e = new N(t)), e;
+    let e = ht.get(t.strings);
+    return e === void 0 && ht.set(t.strings, e = new U(t)), e;
   }
   k(t) {
-    F(this._$AH) || (this._$AH = [], this._$AR());
+    Y(this._$AH) || (this._$AH = [], this._$AR());
     const e = this._$AH;
     let i, s = 0;
-    for (const n of t) s === e.length ? e.push(i = new O(this.O(U()), this.O(U()), this, this.options)) : i = e[s], i._$AI(n), s++;
+    for (const n of t) s === e.length ? e.push(i = new M(this.O(N()), this.O(N()), this, this.options)) : i = e[s], i._$AI(n), s++;
     s < e.length && (this._$AR(i && i._$AB.nextSibling, s), e.length = s);
   }
   _$AR(t = this._$AA.nextSibling, e) {
     var i;
     for ((i = this._$AP) == null ? void 0 : i.call(this, !1, !0, e); t !== this._$AB; ) {
-      const s = Q(t).nextSibling;
-      Q(t).remove(), t = s;
+      const s = rt(t).nextSibling;
+      rt(t).remove(), t = s;
     }
   }
   setConnected(t) {
@@ -438,7 +438,7 @@ class O {
     this._$AM === void 0 && (this._$Cv = t, (e = this._$AP) == null || e.call(this, t));
   }
 }
-class j {
+class F {
   get tagName() {
     return this.element.tagName;
   }
@@ -451,11 +451,11 @@ class j {
   _$AI(t, e = this, i, s) {
     const n = this.strings;
     let o = !1;
-    if (n === void 0) t = x(this, t, e, 0), o = !k(t) || t !== this._$AH && t !== A, o && (this._$AH = t);
+    if (n === void 0) t = E(this, t, e, 0), o = !T(t) || t !== this._$AH && t !== x, o && (this._$AH = t);
     else {
-      const h = t;
-      let a, c;
-      for (t = n[0], a = 0; a < n.length - 1; a++) c = x(this, h[i + a], e, a), c === A && (c = this._$AH[a]), o || (o = !k(c) || c !== this._$AH[a]), c === d ? t = d : t !== d && (t += (c ?? "") + n[a + 1]), this._$AH[a] = c;
+      const l = t;
+      let a, h;
+      for (t = n[0], a = 0; a < n.length - 1; a++) h = E(this, l[i + a], e, a), h === x && (h = this._$AH[a]), o || (o = !T(h) || h !== this._$AH[a]), h === d ? t = d : t !== d && (t += (h ?? "") + n[a + 1]), this._$AH[a] = h;
     }
     o && !s && this.j(t);
   }
@@ -463,7 +463,7 @@ class j {
     t === d ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, t ?? "");
   }
 }
-class St extends j {
+class kt extends F {
   constructor() {
     super(...arguments), this.type = 3;
   }
@@ -471,7 +471,7 @@ class St extends j {
     this.element[this.name] = t === d ? void 0 : t;
   }
 }
-class Ct extends j {
+class Rt extends F {
   constructor() {
     super(...arguments), this.type = 4;
   }
@@ -479,12 +479,12 @@ class Ct extends j {
     this.element.toggleAttribute(this.name, !!t && t !== d);
   }
 }
-class Pt extends j {
+class Lt extends F {
   constructor(t, e, i, s, n) {
     super(t, e, i, s, n), this.type = 5;
   }
   _$AI(t, e = this) {
-    if ((t = x(this, t, e, 0) ?? d) === A) return;
+    if ((t = E(this, t, e, 0) ?? d) === x) return;
     const i = this._$AH, s = t === d && i !== d || t.capture !== i.capture || t.once !== i.once || t.passive !== i.passive, n = t !== d && (i === d || s);
     s && this.element.removeEventListener(this.name, this, i), n && this.element.addEventListener(this.name, this, t), this._$AH = t;
   }
@@ -493,7 +493,7 @@ class Pt extends j {
     typeof this._$AH == "function" ? this._$AH.call(((e = this.options) == null ? void 0 : e.host) ?? this.element, t) : this._$AH.handleEvent(t);
   }
 }
-class Ut {
+class Dt {
   constructor(t, e, i) {
     this.element = t, this.type = 6, this._$AN = void 0, this._$AM = e, this.options = i;
   }
@@ -501,17 +501,17 @@ class Ut {
     return this._$AM._$AU;
   }
   _$AI(t) {
-    x(this, t);
+    E(this, t);
   }
 }
-const L = C.litHtmlPolyfillSupport;
-L == null || L(N, O), (C.litHtmlVersions ?? (C.litHtmlVersions = [])).push("3.3.3");
-const kt = (r, t, e) => {
+const B = z.litHtmlPolyfillSupport;
+B == null || B(U, M), (z.litHtmlVersions ?? (z.litHtmlVersions = [])).push("3.3.3");
+const It = (r, t, e) => {
   const i = (e == null ? void 0 : e.renderBefore) ?? t;
   let s = i._$litPart$;
   if (s === void 0) {
     const n = (e == null ? void 0 : e.renderBefore) ?? null;
-    i._$litPart$ = s = new O(t.insertBefore(U(), n), n, void 0, e ?? {});
+    i._$litPart$ = s = new M(t.insertBefore(N(), n), n, void 0, e ?? {});
   }
   return s._$AI(r), s;
 };
@@ -521,7 +521,7 @@ const kt = (r, t, e) => {
  * SPDX-License-Identifier: BSD-3-Clause
  */
 const v = globalThis;
-class P extends b {
+class S extends A {
   constructor() {
     super(...arguments), this.renderOptions = { host: this }, this._$Do = void 0;
   }
@@ -532,7 +532,7 @@ class P extends b {
   }
   update(t) {
     const e = this.render();
-    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(t), this._$Do = kt(e, this.renderRoot, this.renderOptions);
+    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(t), this._$Do = It(e, this.renderRoot, this.renderOptions);
   }
   connectedCallback() {
     var t;
@@ -543,24 +543,131 @@ class P extends b {
     super.disconnectedCallback(), (t = this._$Do) == null || t.setConnected(!1);
   }
   render() {
-    return A;
+    return x;
   }
 }
-var rt;
-P._$litElement$ = !0, P.finalized = !0, (rt = v.litElementHydrateSupport) == null || rt.call(v, { LitElement: P });
-const B = v.litElementPolyfillSupport;
-B == null || B({ LitElement: P });
+var ut;
+S._$litElement$ = !0, S.finalized = !0, (ut = v.litElementHydrateSupport) == null || ut.call(v, { LitElement: S });
+const W = v.litElementPolyfillSupport;
+W == null || W({ LitElement: S });
 (v.litElementVersions ?? (v.litElementVersions = [])).push("4.2.2");
-const R = class R extends P {
+const Ft = 1, jt = 2, Vt = 4, Bt = 8, w = "medium", H = !0, O = !0, dt = {
+  small: {
+    sliderHeight: 150,
+    buttonSize: 38,
+    iconSize: 20,
+    padding: 12,
+    gap: 10,
+    cardSize: 3
+  },
+  medium: {
+    sliderHeight: 210,
+    buttonSize: 44,
+    iconSize: 22,
+    padding: 16,
+    gap: 14,
+    cardSize: 4
+  },
+  large: {
+    sliderHeight: 280,
+    buttonSize: 54,
+    iconSize: 26,
+    padding: 20,
+    gap: 18,
+    cardSize: 5
+  }
+}, Wt = {
+  entity: "Entidad cover",
+  name: "Nombre",
+  size: "Tamano",
+  slider_height: "Altura de barra",
+  button_size: "Tamano de botones",
+  show_name: "Mostrar nombre",
+  show_position: "Mostrar porcentaje"
+}, qt = [
+  {
+    name: "entity",
+    required: !0,
+    selector: {
+      entity: {
+        domain: "cover"
+      }
+    }
+  },
+  {
+    name: "name",
+    selector: {
+      text: {}
+    }
+  },
+  {
+    name: "size",
+    selector: {
+      select: {
+        mode: "dropdown",
+        options: [
+          { value: "small", label: "Pequena" },
+          { value: "medium", label: "Media" },
+          { value: "large", label: "Grande" }
+        ]
+      }
+    }
+  },
+  {
+    name: "slider_height",
+    selector: {
+      number: {
+        min: 120,
+        max: 420,
+        step: 10,
+        mode: "slider",
+        unit_of_measurement: "px"
+      }
+    }
+  },
+  {
+    name: "button_size",
+    selector: {
+      number: {
+        min: 34,
+        max: 72,
+        step: 2,
+        mode: "slider",
+        unit_of_measurement: "px"
+      }
+    }
+  },
+  {
+    name: "show_name",
+    selector: {
+      boolean: {}
+    }
+  },
+  {
+    name: "show_position",
+    selector: {
+      boolean: {}
+    }
+  }
+], D = class D extends S {
+  constructor() {
+    super(...arguments), this._isSliding = !1;
+  }
   setConfig(t) {
-    if (!t.entity) {
-      this._config = t, this._error = 'Falta la opcion obligatoria "entity" en blind-control-card.';
+    const e = K(t);
+    if (!e.entity) {
+      this._config = e, this._error = 'Falta la opcion obligatoria "entity" en blind-control-card.';
       return;
     }
-    this._config = t, this._error = void 0;
+    this._config = e, this._error = void 0;
   }
   getCardSize() {
-    return 4;
+    var n, o;
+    const t = this._getSizeSettings(), e = ((n = this._config) == null ? void 0 : n.show_name) ?? H, i = ((o = this._config) == null ? void 0 : o.show_position) ?? O, s = t.sliderHeight + t.buttonSize + t.padding * 2 + t.gap * 2 + (e ? 30 : 0) + (i ? 22 : 0);
+    return Math.max(2, Math.ceil(s / 50));
+  }
+  static async getConfigElement() {
+    return document.createElement("blind-control-card-editor");
   }
   static getStubConfig(t) {
     return {
@@ -568,20 +675,21 @@ const R = class R extends P {
       entity: Object.keys((t == null ? void 0 : t.states) ?? {}).find(
         (i) => i.startsWith("cover.")
       ) ?? "cover.persiana_salon",
-      name: "Persiana"
+      name: "Persiana",
+      size: w
     };
   }
   updated(t) {
-    t.has("hass") && (this._dragPosition = void 0);
+    t.has("hass") && !this._isSliding && (this._dragPosition = void 0);
   }
   render() {
-    var h;
+    var u;
     if (this._error)
       return this._renderError(this._error);
-    if (!((h = this._config) != null && h.entity))
+    if (!((u = this._config) != null && u.entity))
       return this._renderError("Configura una entidad cover para usar esta tarjeta.");
     if (!this.hass)
-      return E`
+      return _`
         <ha-card>
           <div class="card-content muted">Cargando Home Assistant...</div>
         </ha-card>
@@ -591,15 +699,19 @@ const R = class R extends P {
     const t = this.hass.states[this._config.entity];
     if (!t)
       return this._renderError(`No existe la entidad "${this._config.entity}".`);
-    const e = this._config.name ?? t.attributes.friendly_name ?? this._config.entity, i = this._getCurrentPosition(t), s = this._dragPosition ?? i ?? 0, n = i !== void 0 || this._dragPosition !== void 0, o = !this._supportsPosition(t);
-    return E`
-      <ha-card>
+    const e = this._config.name ?? t.attributes.friendly_name ?? this._config.entity, i = this._getCurrentPosition(t), s = this._dragPosition ?? i ?? this._positionFromState(t), n = i !== void 0 || this._dragPosition !== void 0, o = this._isUnavailable(t), l = this._supportsFeature(
+      t,
+      Vt,
+      i !== void 0
+    ), a = this._config.show_name ?? H, h = this._config.show_position ?? O, p = this._getSizeSettings(), c = this._getCardStyle(p);
+    return _`
+      <ha-card style=${c}>
         <div class="card-content">
-          <h2 class="title">${e}</h2>
+          ${a ? _`<h2 class="title">${e}</h2>` : d}
 
           <div class="slider-block">
             <div
-              class=${`slider-shell${o ? " disabled" : ""}`}
+              class=${`slider-shell${l && !o ? "" : " disabled"}`}
               style=${`--position: ${s};`}
             >
               <span class="scale top">100</span>
@@ -615,40 +727,65 @@ const R = class R extends P {
                 max="100"
                 step="1"
                 .value=${String(s)}
-                ?disabled=${o}
+                ?disabled=${!l || o}
                 aria-label=${`Posicion de ${e}`}
                 @input=${this._handleSliderInput}
                 @change=${this._handlePositionChange}
               />
             </div>
-            <div class="position-label">
-              ${n ? `${s}%` : "Sin posicion"}
-            </div>
+
+            ${h ? _`
+                  <div class="position-label">
+                    ${n ? `${s}%` : this._getStateLabel(t)}
+                  </div>
+                ` : d}
           </div>
 
-          ${o ? E`<div class="hint">
-                Esta entidad no expone <code>current_position</code>.
+          ${!l && !o ? _`<div class="hint">
+                Esta entidad no permite fijar posicion desde Home Assistant.
               </div>` : d}
 
+          ${o ? _`<div class="hint">La entidad esta ${t.state}.</div>` : d}
+
           <div class="actions">
-            ${this._renderButton("Subir", "mdi:arrow-up", "open_cover")}
-            ${this._renderButton("Parar", "mdi:stop", "stop_cover")}
-            ${this._renderButton("Bajar", "mdi:arrow-down", "close_cover")}
+            ${this._renderButton(
+      "Subir",
+      "mdi:arrow-up-bold",
+      "open_cover",
+      o || !this._supportsFeature(t, Ft, !0)
+    )}
+            ${this._renderButton(
+      "Parar",
+      "mdi:stop",
+      "stop_cover",
+      o || !this._supportsFeature(t, Bt, !0)
+    )}
+            ${this._renderButton(
+      "Bajar",
+      "mdi:arrow-down-bold",
+      "close_cover",
+      o || !this._supportsFeature(t, jt, !0)
+    )}
           </div>
         </div>
       </ha-card>
     `;
   }
-  _renderButton(t, e, i) {
-    return E`
-      <button type="button" @click=${() => this._callCoverService(i)}>
+  _renderButton(t, e, i, s) {
+    return _`
+      <button
+        type="button"
+        title=${t}
+        aria-label=${t}
+        ?disabled=${s}
+        @click=${() => this._callCoverService(i)}
+      >
         <ha-icon .icon=${e}></ha-icon>
-        <span>${t}</span>
       </button>
     `;
   }
   _renderError(t) {
-    return E`
+    return _`
       <ha-card>
         <div class="card-content error" role="alert">
           <strong>Blind Control Card</strong>
@@ -659,18 +796,23 @@ const R = class R extends P {
   }
   _handleSliderInput(t) {
     const e = t.currentTarget;
-    this._dragPosition = Number(e.value);
+    this._isSliding = !0, this._dragPosition = Number(e.value);
   }
   _handlePositionChange(t) {
     const e = t.currentTarget, i = Number(e.value);
-    this._dragPosition = i, this._callCoverService("set_cover_position", { position: i });
+    this._isSliding = !1, this._dragPosition = i, this._callCoverService("set_cover_position", { position: i });
   }
   async _callCoverService(t, e = {}) {
     var i;
-    !this.hass || !((i = this._config) != null && i.entity) || await this.hass.callService("cover", t, {
-      entity_id: this._config.entity,
-      ...e
-    });
+    if (!(!this.hass || !((i = this._config) != null && i.entity)))
+      try {
+        await this.hass.callService("cover", t, {
+          entity_id: this._config.entity,
+          ...e
+        });
+      } catch (s) {
+        console.error("blind-control-card service call failed", s);
+      }
   }
   _getCurrentPosition(t) {
     const e = t.attributes.current_position;
@@ -681,22 +823,61 @@ const R = class R extends P {
       return Number.isFinite(i) ? this._clampPosition(i) : void 0;
     }
   }
-  _supportsPosition(t) {
-    return this._getCurrentPosition(t) !== void 0;
+  _positionFromState(t) {
+    return t.state === "open" ? 100 : t.state === "closed" ? 0 : 50;
+  }
+  _getStateLabel(t) {
+    return t.state === "unknown" || t.state === "unavailable" ? t.state : "Sin posicion";
+  }
+  _supportsFeature(t, e, i) {
+    const s = t.attributes.supported_features, n = typeof s == "number" ? s : Number(s);
+    return Number.isFinite(n) ? (n & e) !== 0 : i;
+  }
+  _isUnavailable(t) {
+    return t.state === "unavailable" || t.state === "unknown";
+  }
+  _getSizeSettings() {
+    var i, s, n;
+    const t = ((i = this._config) == null ? void 0 : i.size) ?? w, e = dt[t] ?? dt[w];
+    return {
+      ...e,
+      sliderHeight: pt(
+        (s = this._config) == null ? void 0 : s.slider_height,
+        120,
+        420,
+        e.sliderHeight
+      ),
+      buttonSize: pt(
+        (n = this._config) == null ? void 0 : n.button_size,
+        34,
+        72,
+        e.buttonSize
+      )
+    };
+  }
+  _getCardStyle(t) {
+    return [
+      `--blind-slider-height: ${t.sliderHeight}px`,
+      `--blind-button-size: ${t.buttonSize}px`,
+      `--blind-icon-size: ${t.iconSize}px`,
+      `--blind-card-padding: ${t.padding}px`,
+      `--blind-card-gap: ${t.gap}px`
+    ].join(";");
   }
   _clampPosition(t) {
     return Math.min(100, Math.max(0, Math.round(t)));
   }
 };
-R.properties = {
+D.properties = {
   hass: { attribute: !1 },
   _config: { state: !0 },
   _error: { state: !0 },
   _dragPosition: { state: !0 }
-}, R.styles = pt`
+}, D.styles = mt`
     :host {
       display: block;
       color: var(--primary-text-color);
+      container-type: inline-size;
     }
 
     ha-card {
@@ -706,12 +887,15 @@ R.properties = {
       box-shadow: var(--ha-card-box-shadow, none);
       border: var(--ha-card-border-width, 0) solid
         var(--ha-card-border-color, var(--divider-color));
+      overflow: hidden;
     }
 
     .card-content {
-      padding: 18px 16px 16px;
+      width: 100%;
+      box-sizing: border-box;
+      padding: var(--blind-card-padding, 16px);
       display: grid;
-      gap: 16px;
+      gap: var(--blind-card-gap, 14px);
       justify-items: center;
     }
 
@@ -719,8 +903,8 @@ R.properties = {
       margin: 0;
       width: 100%;
       text-align: center;
-      font-size: 1.15rem;
-      line-height: 1.3;
+      font-size: 1.05rem;
+      line-height: 1.25;
       font-weight: 500;
       color: var(--primary-text-color);
       overflow-wrap: anywhere;
@@ -729,23 +913,25 @@ R.properties = {
     .slider-block {
       display: grid;
       justify-items: center;
-      gap: 10px;
+      gap: 8px;
       width: 100%;
     }
 
     .slider-shell {
       --position: 0;
       position: relative;
-      width: 88px;
-      height: 220px;
+      width: min(96px, 100%);
+      height: var(--blind-slider-height, 210px);
       display: grid;
       place-items: center;
+      touch-action: none;
     }
 
     .slider-track {
       position: relative;
       width: 14px;
-      height: 190px;
+      height: calc(var(--blind-slider-height, 210px) - 30px);
+      min-height: 86px;
       overflow: hidden;
       border-radius: 999px;
       background: var(--divider-color);
@@ -802,55 +988,54 @@ R.properties = {
 
     .scale {
       position: absolute;
-      right: 2px;
-      font-size: 0.75rem;
+      right: 0;
+      font-size: 0.72rem;
       line-height: 1;
       color: var(--secondary-text-color);
       pointer-events: none;
     }
 
     .scale.top {
-      top: 8px;
+      top: 6px;
     }
 
     .scale.bottom {
-      bottom: 8px;
+      bottom: 6px;
     }
 
     .position-label {
-      min-height: 1.25rem;
-      font-size: 0.95rem;
+      min-height: 1.1rem;
+      font-size: 0.9rem;
+      line-height: 1.1;
       color: var(--secondary-text-color);
     }
 
     .hint {
-      margin-top: -8px;
-      font-size: 0.85rem;
-      line-height: 1.4;
+      margin-top: calc(var(--blind-card-gap, 14px) * -0.5);
+      max-width: 100%;
+      font-size: 0.82rem;
+      line-height: 1.35;
       text-align: center;
       color: var(--secondary-text-color);
-    }
-
-    .hint code {
-      font-family: var(--paper-font-code1_-_font-family, monospace);
-      color: var(--primary-text-color);
+      overflow-wrap: anywhere;
     }
 
     .actions {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
       width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, var(--blind-button-size, 44px)));
+      justify-content: center;
+      gap: max(6px, calc(var(--blind-button-size, 44px) * 0.18));
     }
 
     button {
+      width: 100%;
+      height: var(--blind-button-size, 44px);
       min-width: 0;
-      min-height: 44px;
-      padding: 8px 6px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      min-height: 34px;
+      padding: 0;
+      display: inline-grid;
+      place-items: center;
       border: 1px solid var(--divider-color);
       border-radius: 8px;
       background: var(--secondary-background-color, transparent);
@@ -860,7 +1045,8 @@ R.properties = {
       transition:
         background 120ms ease,
         border-color 120ms ease,
-        color 120ms ease;
+        color 120ms ease,
+        opacity 120ms ease;
     }
 
     button:hover,
@@ -874,16 +1060,14 @@ R.properties = {
       background: color-mix(in srgb, var(--primary-color), transparent 78%);
     }
 
-    ha-icon {
-      --mdc-icon-size: 20px;
-      color: var(--primary-color);
-      flex: 0 0 auto;
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
     }
 
-    button span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    ha-icon {
+      --mdc-icon-size: var(--blind-icon-size, 22px);
+      color: var(--primary-color);
     }
 
     .muted {
@@ -901,22 +1085,111 @@ R.properties = {
       color: var(--primary-text-color);
     }
 
-    @media (max-width: 360px) {
-      .actions {
-        grid-template-columns: 1fr;
+    @container (max-width: 170px) {
+      .card-content {
+        padding-inline: 8px;
       }
 
-      button span {
-        white-space: normal;
+      .actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 5px;
+      }
+
+      .scale {
+        right: 2px;
       }
     }
   `;
-let W = R;
-customElements.get("blind-control-card") || customElements.define("blind-control-card", W);
+let Z = D;
+const I = class I extends S {
+  constructor() {
+    super(...arguments), this._computeLabel = (t) => Wt[t.name] ?? t.name;
+  }
+  setConfig(t) {
+    this._config = K(t);
+  }
+  render() {
+    return _`
+      <div class="editor">
+        <ha-form
+          .hass=${this.hass}
+          .data=${this._getEditorData()}
+          .schema=${qt}
+          .computeLabel=${this._computeLabel}
+          @value-changed=${this._handleValueChanged}
+        ></ha-form>
+      </div>
+    `;
+  }
+  _getEditorData() {
+    return {
+      type: "custom:blind-control-card",
+      size: w,
+      show_name: H,
+      show_position: O,
+      ...this._config
+    };
+  }
+  _handleValueChanged(t) {
+    const e = t.detail.value, i = Zt({
+      ...this._config,
+      ...e,
+      type: "custom:blind-control-card"
+    });
+    this._config = K(i), this.dispatchEvent(
+      new CustomEvent("config-changed", {
+        detail: { config: i },
+        bubbles: !0,
+        composed: !0
+      })
+    );
+  }
+};
+I.properties = {
+  hass: { attribute: !1 },
+  _config: { state: !0 }
+}, I.styles = mt`
+    .editor {
+      display: block;
+    }
+  `;
+let J = I;
+function K(r) {
+  const t = yt(r.size) ? r.size : w;
+  return {
+    ...r,
+    type: r.type || "custom:blind-control-card",
+    size: t,
+    show_name: r.show_name ?? H,
+    show_position: r.show_position ?? O
+  };
+}
+function Zt(r) {
+  const t = {
+    ...r,
+    type: "custom:blind-control-card"
+  };
+  typeof t.name == "string" && (t.name = t.name.trim()), t.name || delete t.name, t.entity || delete t.entity, (!yt(t.size) || t.size === w) && delete t.size, t.show_name === H && delete t.show_name, t.show_position === O && delete t.show_position;
+  const e = G(t.slider_height, 120, 420), i = G(t.button_size, 34, 72);
+  return e === void 0 ? delete t.slider_height : t.slider_height = e, i === void 0 ? delete t.button_size : t.button_size = i, t;
+}
+function yt(r) {
+  return r === "small" || r === "medium" || r === "large";
+}
+function G(r, t, e) {
+  const i = typeof r == "number" ? r : Number(r);
+  if (Number.isFinite(i))
+    return Math.min(e, Math.max(t, Math.round(i)));
+}
+function pt(r, t, e, i) {
+  return G(r, t, e) ?? i;
+}
+customElements.get("blind-control-card") || customElements.define("blind-control-card", Z);
+customElements.get("blind-control-card-editor") || customElements.define("blind-control-card-editor", J);
 window.customCards = window.customCards ?? [];
 window.customCards.some((r) => r.type === "blind-control-card") || window.customCards.push({
   type: "blind-control-card",
   name: "Blind Control Card",
-  description: "Control vertical para persianas y otras entidades cover.",
+  description: "Control responsive para persianas y covers Shelly.",
   preview: !0
 });
