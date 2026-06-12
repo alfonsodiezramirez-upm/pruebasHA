@@ -27,6 +27,7 @@ icon: mdi:blinds
 - Colores de fondo configurables para todos los botones o por boton.
 - Presets visuales propios con `card_theme`.
 - Compatible con entidades `cover` de Shelly 2PM Gen4 cuando el dispositivo esta configurado en Home Assistant como cubierta/persiana.
+- Sugerencias en el selector de tarjetas por entidad `cover` en Home Assistant 2026.6 o superior.
 - Servicios usados:
   - `cover.open_cover`
   - `cover.stop_cover`
@@ -156,6 +157,16 @@ Para usar Shelly 2PM Gen4, configura el dispositivo en Home Assistant con perfil
 La tarjeta hereda las variables del tema activo de Home Assistant (`primary-color`, `ha-card-background`, `divider-color`, etc.).
 
 Home Assistant permite definir temas en la integracion `frontend` y aplicarlos por usuario o por vista. Si aplicas un tema a una vista, Home Assistant lo aplica a la vista y sus tarjetas. Para personalizacion por tarjeta, `blind-control-card` incluye el campo `card_theme`, que ofrece presets internos sin cambiar el tema global.
+
+## Sugerencias por entidad
+
+En Home Assistant 2026.6 o superior, al seleccionar una entidad `cover` desde el selector de entidades del panel, la tarjeta puede aparecer como sugerencia de comunidad.
+
+La tarjeta ofrece estas variantes:
+
+- `Completa`: slider y botones.
+- `Solo slider`: si la entidad soporta posicion.
+- `Solo botones`: controles de subir, parar y bajar.
 
 ## Notas
 

@@ -58,6 +58,11 @@ interface SizePreset {
   cardSize: number;
 }
 
+interface EntitySuggestion {
+  label?: string;
+  config: BlindControlCardConfig;
+}
+
 const COVER_FEATURE_OPEN = 1;
 const COVER_FEATURE_CLOSE = 2;
 const COVER_FEATURE_SET_POSITION = 4;
@@ -1147,6 +1152,63 @@ function cleanCssColor(value: unknown): string | undefined {
   return color;
 }
 
+function getBlindControlEntitySuggestion(
+  hass: HomeAssistant,
+  entityId: string
+): EntitySuggestion[] | null {
+  if (!entityId.startsWith("cover.")) {
+    return null;
+  }
+
+  const stateObj = hass.states[entityId];
+  const suggestions: EntitySuggestion[] = [
+    {
+      label: "Completa",
+      config: {
+        type: "custom:blind-control-card",
+        entity: entityId,
+        icon: "mdi:blinds"
+      }
+    }
+  ];
+
+  if (stateObj ? entitySupportsPosition(stateObj) : true) {
+    suggestions.push({
+      label: "Solo slider",
+      config: {
+        type: "custom:blind-control-card",
+        entity: entityId,
+        icon: "mdi:blinds",
+        show_buttons: false
+      }
+    });
+  }
+
+  suggestions.push({
+    label: "Solo botones",
+    config: {
+      type: "custom:blind-control-card",
+      entity: entityId,
+      icon: "mdi:blinds",
+      show_slider: false
+    }
+  });
+
+  return suggestions;
+}
+
+function entitySupportsPosition(stateObj: HassEntity): boolean {
+  const rawFeatures = stateObj.attributes.supported_features;
+  const supportedFeatures =
+    typeof rawFeatures === "number" ? rawFeatures : Number(rawFeatures);
+
+  if (Number.isFinite(supportedFeatures)) {
+    return (supportedFeatures & COVER_FEATURE_SET_POSITION) !== 0;
+  }
+
+  return stateObj.attributes.current_position !== undefined;
+}
+
 if (!customElements.get("blind-control-card")) {
   customElements.define("blind-control-card", BlindControlCard);
 }
@@ -1162,6 +1224,10 @@ declare global {
       name: string;
       description: string;
       preview?: boolean;
+      getEntitySuggestion?: (
+        hass: HomeAssistant,
+        entityId: string
+      ) => EntitySuggestion | EntitySuggestion[] | null;
     }>;
   }
 }
@@ -1173,6 +1239,7 @@ if (!window.customCards.some((card) => card.type === "blind-control-card")) {
     type: "blind-control-card",
     name: "Blind Control Card",
     description: "Control responsive para persianas y covers Shelly.",
-    preview: true
+    preview: true,
+    getEntitySuggestion: getBlindControlEntitySuggestion
   });
 }
