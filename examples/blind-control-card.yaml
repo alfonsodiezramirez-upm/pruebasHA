@@ -1,6 +1,9 @@
 type: custom:blind-control-card
 entity: cover.persiana_salon
-name: Persiana Salon
 size: small
+icon: mdi:blinds
+card_theme: minimal
 slider_height: 160
+slider_width: 22
 button_size: 38
+button_background_color: "rgba(120, 120, 120, 0.12)"

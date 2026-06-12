@@ -1,6 +1,7 @@
 import { LitElement, css, html, nothing, type PropertyValues } from "lit";
 
 type BlindControlCardSize = "small" | "medium" | "large";
+type BlindControlCardTheme = "default" | "minimal" | "filled" | "outline";
 type CoverService =
   | "open_cover"
   | "stop_cover"
@@ -11,11 +12,20 @@ interface BlindControlCardConfig {
   type: string;
   entity?: string;
   name?: string;
+  icon?: string;
   size?: BlindControlCardSize;
+  card_theme?: BlindControlCardTheme;
   slider_height?: number;
+  slider_width?: number;
   button_size?: number;
   show_name?: boolean;
   show_position?: boolean;
+  show_slider?: boolean;
+  show_buttons?: boolean;
+  button_background_color?: string;
+  open_button_background_color?: string;
+  stop_button_background_color?: string;
+  close_button_background_color?: string;
 }
 
 interface HassEntity {
@@ -40,6 +50,7 @@ interface HomeAssistant {
 
 interface SizePreset {
   sliderHeight: number;
+  sliderWidth: number;
   buttonSize: number;
   iconSize: number;
   padding: number;
@@ -53,12 +64,16 @@ const COVER_FEATURE_SET_POSITION = 4;
 const COVER_FEATURE_STOP = 8;
 
 const DEFAULT_SIZE: BlindControlCardSize = "medium";
+const DEFAULT_CARD_THEME: BlindControlCardTheme = "default";
 const DEFAULT_SHOW_NAME = true;
 const DEFAULT_SHOW_POSITION = true;
+const DEFAULT_SHOW_SLIDER = true;
+const DEFAULT_SHOW_BUTTONS = true;
 
 const SIZE_PRESETS: Record<BlindControlCardSize, SizePreset> = {
   small: {
     sliderHeight: 150,
+    sliderWidth: 14,
     buttonSize: 38,
     iconSize: 20,
     padding: 12,
@@ -67,6 +82,7 @@ const SIZE_PRESETS: Record<BlindControlCardSize, SizePreset> = {
   },
   medium: {
     sliderHeight: 210,
+    sliderWidth: 14,
     buttonSize: 44,
     iconSize: 22,
     padding: 16,
@@ -75,6 +91,7 @@ const SIZE_PRESETS: Record<BlindControlCardSize, SizePreset> = {
   },
   large: {
     sliderHeight: 280,
+    sliderWidth: 16,
     buttonSize: 54,
     iconSize: 26,
     padding: 20,
@@ -86,11 +103,20 @@ const SIZE_PRESETS: Record<BlindControlCardSize, SizePreset> = {
 const EDITOR_LABELS: Record<string, string> = {
   entity: "Entidad cover",
   name: "Nombre",
+  icon: "Icono junto al nombre",
   size: "Tamano",
+  card_theme: "Tema de tarjeta",
   slider_height: "Altura de barra",
+  slider_width: "Ancho de barra",
   button_size: "Tamano de botones",
   show_name: "Mostrar nombre",
-  show_position: "Mostrar porcentaje"
+  show_position: "Mostrar porcentaje",
+  show_slider: "Mostrar slider",
+  show_buttons: "Mostrar botones",
+  button_background_color: "Fondo de todos los botones",
+  open_button_background_color: "Fondo boton subir",
+  stop_button_background_color: "Fondo boton parar",
+  close_button_background_color: "Fondo boton bajar"
 };
 
 const EDITOR_SCHEMA = [
@@ -110,6 +136,12 @@ const EDITOR_SCHEMA = [
     }
   },
   {
+    name: "icon",
+    selector: {
+      icon: {}
+    }
+  },
+  {
     name: "size",
     selector: {
       select: {
@@ -123,12 +155,50 @@ const EDITOR_SCHEMA = [
     }
   },
   {
+    name: "card_theme",
+    selector: {
+      select: {
+        mode: "dropdown",
+        options: [
+          { value: "default", label: "Home Assistant" },
+          { value: "minimal", label: "Minimal" },
+          { value: "filled", label: "Relleno" },
+          { value: "outline", label: "Borde" }
+        ]
+      }
+    }
+  },
+  {
+    name: "show_slider",
+    selector: {
+      boolean: {}
+    }
+  },
+  {
+    name: "show_buttons",
+    selector: {
+      boolean: {}
+    }
+  },
+  {
     name: "slider_height",
     selector: {
       number: {
         min: 120,
         max: 420,
         step: 10,
+        mode: "slider",
+        unit_of_measurement: "px"
+      }
+    }
+  },
+  {
+    name: "slider_width",
+    selector: {
+      number: {
+        min: 8,
+        max: 44,
+        step: 1,
         mode: "slider",
         unit_of_measurement: "px"
       }
@@ -156,6 +226,30 @@ const EDITOR_SCHEMA = [
     name: "show_position",
     selector: {
       boolean: {}
+    }
+  },
+  {
+    name: "button_background_color",
+    selector: {
+      text: {}
+    }
+  },
+  {
+    name: "open_button_background_color",
+    selector: {
+      text: {}
+    }
+  },
+  {
+    name: "stop_button_background_color",
+    selector: {
+      text: {}
+    }
+  },
+  {
+    name: "close_button_background_color",
+    selector: {
+      text: {}
     }
   }
 ];
@@ -192,13 +286,17 @@ class BlindControlCard extends LitElement {
     const settings = this._getSizeSettings();
     const showName = this._config?.show_name ?? DEFAULT_SHOW_NAME;
     const showPosition = this._config?.show_position ?? DEFAULT_SHOW_POSITION;
+    const showSlider = this._config?.show_slider ?? DEFAULT_SHOW_SLIDER;
+    const showButtons = this._config?.show_buttons ?? DEFAULT_SHOW_BUTTONS;
+    const sections = [
+      showName ? 30 : 0,
+      showSlider ? settings.sliderHeight + (showPosition ? 22 : 0) : 0,
+      showButtons ? settings.buttonSize : 0
+    ].filter((height) => height > 0);
     const estimatedHeight =
-      settings.sliderHeight +
-      settings.buttonSize +
       settings.padding * 2 +
-      settings.gap * 2 +
-      (showName ? 30 : 0) +
-      (showPosition ? 22 : 0);
+      sections.reduce((total, height) => total + height, 0) +
+      Math.max(0, sections.length - 1) * settings.gap;
 
     return Math.max(2, Math.ceil(estimatedHeight / 50));
   }
@@ -215,7 +313,6 @@ class BlindControlCard extends LitElement {
     return {
       type: "custom:blind-control-card",
       entity: entity ?? "cover.persiana_salon",
-      name: "Persiana",
       size: DEFAULT_SIZE
     };
   }
@@ -267,80 +364,114 @@ class BlindControlCard extends LitElement {
     );
     const showName = this._config.show_name ?? DEFAULT_SHOW_NAME;
     const showPosition = this._config.show_position ?? DEFAULT_SHOW_POSITION;
+    const showSlider = this._config.show_slider ?? DEFAULT_SHOW_SLIDER;
+    const showButtons = this._config.show_buttons ?? DEFAULT_SHOW_BUTTONS;
+    const cardTheme = this._config.card_theme ?? DEFAULT_CARD_THEME;
     const settings = this._getSizeSettings();
     const cardStyle = this._getCardStyle(settings);
 
+    if (!showSlider && !showButtons) {
+      return this._renderError("Activa show_slider o show_buttons para mostrar controles.");
+    }
+
     return html`
-      <ha-card style=${cardStyle}>
+      <ha-card class=${`theme-${cardTheme}`} style=${cardStyle}>
         <div class="card-content">
-          ${showName ? html`<h2 class="title">${name}</h2>` : nothing}
+          ${showName ? this._renderTitle(name) : nothing}
 
-          <div class="slider-block">
-            <div
-              class=${`slider-shell${supportsPosition && !unavailable ? "" : " disabled"}`}
-              style=${`--position: ${visiblePosition};`}
-            >
-              <span class="scale top">100</span>
-              <div class="slider-track" aria-hidden="true">
-                <div class="slider-fill"></div>
-                <div class="slider-thumb"></div>
-              </div>
-              <span class="scale bottom">0</span>
-              <input
-                class="position-slider"
-                type="range"
-                min="0"
-                max="100"
-                step="1"
-                .value=${String(visiblePosition)}
-                ?disabled=${!supportsPosition || unavailable}
-                aria-label=${`Posicion de ${name}`}
-                @input=${this._handleSliderInput}
-                @change=${this._handlePositionChange}
-              />
-            </div>
-
-            ${showPosition
-              ? html`
-                  <div class="position-label">
-                    ${hasPosition ? `${visiblePosition}%` : this._getStateLabel(stateObj)}
+          ${showSlider
+            ? html`
+                <div class="slider-block">
+                  <div
+                    class=${`slider-shell${
+                      supportsPosition && !unavailable ? "" : " disabled"
+                    }`}
+                    style=${`--position: ${visiblePosition};`}
+                  >
+                    <span class="scale top">100</span>
+                    <div class="slider-track" aria-hidden="true">
+                      <div class="slider-fill"></div>
+                      <div class="slider-thumb"></div>
+                    </div>
+                    <span class="scale bottom">0</span>
+                    <input
+                      class="position-slider"
+                      type="range"
+                      min="0"
+                      max="100"
+                      step="1"
+                      .value=${String(visiblePosition)}
+                      ?disabled=${!supportsPosition || unavailable}
+                      aria-label=${`Posicion de ${name}`}
+                      @input=${this._handleSliderInput}
+                      @change=${this._handlePositionChange}
+                    />
                   </div>
-                `
-              : nothing}
-          </div>
 
-          ${!supportsPosition && !unavailable
+                  ${showPosition
+                    ? html`
+                        <div class="position-label">
+                          ${hasPosition
+                            ? `${visiblePosition}%`
+                            : this._getStateLabel(stateObj)}
+                        </div>
+                      `
+                    : nothing}
+                </div>
+              `
+            : nothing}
+
+          ${showSlider && !supportsPosition && !unavailable
             ? html`<div class="hint">
                 Esta entidad no permite fijar posicion desde Home Assistant.
               </div>`
             : nothing}
 
-          ${unavailable
+          ${showSlider && unavailable
             ? html`<div class="hint">La entidad esta ${stateObj.state}.</div>`
             : nothing}
 
-          <div class="actions">
-            ${this._renderButton(
-              "Subir",
-              "mdi:arrow-up-bold",
-              "open_cover",
-              unavailable || !this._supportsFeature(stateObj, COVER_FEATURE_OPEN, true)
-            )}
-            ${this._renderButton(
-              "Parar",
-              "mdi:stop",
-              "stop_cover",
-              unavailable || !this._supportsFeature(stateObj, COVER_FEATURE_STOP, true)
-            )}
-            ${this._renderButton(
-              "Bajar",
-              "mdi:arrow-down-bold",
-              "close_cover",
-              unavailable || !this._supportsFeature(stateObj, COVER_FEATURE_CLOSE, true)
-            )}
-          </div>
+          ${showButtons
+            ? html`
+                <div class="actions">
+                  ${this._renderButton(
+                    "Subir",
+                    "mdi:arrow-up-bold",
+                    "open_cover",
+                    unavailable || !this._supportsFeature(stateObj, COVER_FEATURE_OPEN, true),
+                    this._getButtonBackground("open")
+                  )}
+                  ${this._renderButton(
+                    "Parar",
+                    "mdi:stop",
+                    "stop_cover",
+                    unavailable || !this._supportsFeature(stateObj, COVER_FEATURE_STOP, true),
+                    this._getButtonBackground("stop")
+                  )}
+                  ${this._renderButton(
+                    "Bajar",
+                    "mdi:arrow-down-bold",
+                    "close_cover",
+                    unavailable || !this._supportsFeature(stateObj, COVER_FEATURE_CLOSE, true),
+                    this._getButtonBackground("close")
+                  )}
+                </div>
+              `
+            : nothing}
         </div>
       </ha-card>
+    `;
+  }
+
+  private _renderTitle(name: string) {
+    const icon = this._getIcon();
+
+    return html`
+      <div class="title-row">
+        ${icon ? html`<ha-icon class="title-icon" .icon=${icon}></ha-icon>` : nothing}
+        <h2 class="title">${name}</h2>
+        ${icon ? html`<ha-icon class="title-icon" .icon=${icon}></ha-icon>` : nothing}
+      </div>
     `;
   }
 
@@ -348,13 +479,15 @@ class BlindControlCard extends LitElement {
     label: string,
     icon: string,
     service: Exclude<CoverService, "set_cover_position">,
-    disabled: boolean
+    disabled: boolean,
+    backgroundColor?: string
   ) {
     return html`
       <button
         type="button"
         title=${label}
         aria-label=${label}
+        style=${backgroundColor ? `--blind-button-bg: ${backgroundColor};` : ""}
         ?disabled=${disabled}
         @click=${() => this._callCoverService(service)}
       >
@@ -461,6 +594,22 @@ class BlindControlCard extends LitElement {
     return stateObj.state === "unavailable" || stateObj.state === "unknown";
   }
 
+  private _getIcon(): string | undefined {
+    const icon = this._config?.icon?.trim();
+    return icon || undefined;
+  }
+
+  private _getButtonBackground(type: "open" | "stop" | "close"): string | undefined {
+    const specificColor =
+      type === "open"
+        ? this._config?.open_button_background_color
+        : type === "stop"
+          ? this._config?.stop_button_background_color
+          : this._config?.close_button_background_color;
+
+    return cleanCssColor(specificColor) ?? cleanCssColor(this._config?.button_background_color);
+  }
+
   private _getSizeSettings(): SizePreset {
     const size = this._config?.size ?? DEFAULT_SIZE;
     const preset = SIZE_PRESETS[size] ?? SIZE_PRESETS[DEFAULT_SIZE];
@@ -472,6 +621,12 @@ class BlindControlCard extends LitElement {
         120,
         420,
         preset.sliderHeight
+      ),
+      sliderWidth: clampNumber(
+        this._config?.slider_width,
+        8,
+        44,
+        preset.sliderWidth
       ),
       buttonSize: clampNumber(
         this._config?.button_size,
@@ -485,6 +640,8 @@ class BlindControlCard extends LitElement {
   private _getCardStyle(settings: SizePreset): string {
     return [
       `--blind-slider-height: ${settings.sliderHeight}px`,
+      `--blind-slider-width: ${settings.sliderWidth}px`,
+      `--blind-thumb-size: ${Math.max(30, settings.sliderWidth + 16)}px`,
       `--blind-button-size: ${settings.buttonSize}px`,
       `--blind-icon-size: ${settings.iconSize}px`,
       `--blind-card-padding: ${settings.padding}px`,
@@ -513,6 +670,27 @@ class BlindControlCard extends LitElement {
       overflow: hidden;
     }
 
+    ha-card.theme-minimal {
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    ha-card.theme-filled {
+      background: color-mix(
+        in srgb,
+        var(--primary-color),
+        var(--ha-card-background, var(--card-background-color)) 88%
+      );
+    }
+
+    ha-card.theme-outline {
+      background: transparent;
+      border-width: max(1px, var(--ha-card-border-width, 1px));
+      border-color: color-mix(in srgb, var(--primary-color), var(--divider-color) 55%);
+      box-shadow: none;
+    }
+
     .card-content {
       width: 100%;
       box-sizing: border-box;
@@ -520,6 +698,16 @@ class BlindControlCard extends LitElement {
       display: grid;
       gap: var(--blind-card-gap, 14px);
       justify-items: center;
+    }
+
+    .title-row {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto minmax(0, auto) auto;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
     }
 
     .title {
@@ -531,6 +719,11 @@ class BlindControlCard extends LitElement {
       font-weight: 500;
       color: var(--primary-text-color);
       overflow-wrap: anywhere;
+    }
+
+    .title-icon {
+      --mdc-icon-size: calc(var(--blind-icon-size, 22px) * 0.95);
+      color: var(--primary-color);
     }
 
     .slider-block {
@@ -552,7 +745,7 @@ class BlindControlCard extends LitElement {
 
     .slider-track {
       position: relative;
-      width: 14px;
+      width: var(--blind-slider-width, 14px);
       height: calc(var(--blind-slider-height, 210px) - 30px);
       min-height: 86px;
       overflow: hidden;
@@ -574,8 +767,8 @@ class BlindControlCard extends LitElement {
       position: absolute;
       left: 50%;
       bottom: calc(var(--position) * 1%);
-      width: 30px;
-      height: 30px;
+      width: var(--blind-thumb-size, 30px);
+      height: var(--blind-thumb-size, 30px);
       border-radius: 50%;
       transform: translate(-50%, 50%);
       background: var(--primary-color);
@@ -661,7 +854,7 @@ class BlindControlCard extends LitElement {
       place-items: center;
       border: 1px solid var(--divider-color);
       border-radius: 8px;
-      background: var(--secondary-background-color, transparent);
+      background: var(--blind-button-bg, var(--secondary-background-color, transparent));
       color: var(--primary-text-color);
       font: inherit;
       cursor: pointer;
@@ -757,8 +950,11 @@ class BlindControlCardEditor extends LitElement {
     return {
       type: "custom:blind-control-card",
       size: DEFAULT_SIZE,
+      card_theme: DEFAULT_CARD_THEME,
       show_name: DEFAULT_SHOW_NAME,
       show_position: DEFAULT_SHOW_POSITION,
+      show_slider: DEFAULT_SHOW_SLIDER,
+      show_buttons: DEFAULT_SHOW_BUTTONS,
       ...this._config
     };
   }
@@ -793,13 +989,19 @@ class BlindControlCardEditor extends LitElement {
 
 function normalizeConfig(config: BlindControlCardConfig): BlindControlCardConfig {
   const size = isCardSize(config.size) ? config.size : DEFAULT_SIZE;
+  const cardTheme = isCardTheme(config.card_theme)
+    ? config.card_theme
+    : DEFAULT_CARD_THEME;
 
   return {
     ...config,
     type: config.type || "custom:blind-control-card",
     size,
+    card_theme: cardTheme,
     show_name: config.show_name ?? DEFAULT_SHOW_NAME,
-    show_position: config.show_position ?? DEFAULT_SHOW_POSITION
+    show_position: config.show_position ?? DEFAULT_SHOW_POSITION,
+    show_slider: config.show_slider ?? DEFAULT_SHOW_SLIDER,
+    show_buttons: config.show_buttons ?? DEFAULT_SHOW_BUTTONS
   };
 }
 
@@ -813,8 +1015,16 @@ function cleanConfig(config: BlindControlCardConfig): BlindControlCardConfig {
     next.name = next.name.trim();
   }
 
+  if (typeof next.icon === "string") {
+    next.icon = next.icon.trim();
+  }
+
   if (!next.name) {
     delete next.name;
+  }
+
+  if (!next.icon) {
+    delete next.icon;
   }
 
   if (!next.entity) {
@@ -825,6 +1035,10 @@ function cleanConfig(config: BlindControlCardConfig): BlindControlCardConfig {
     delete next.size;
   }
 
+  if (!isCardTheme(next.card_theme) || next.card_theme === DEFAULT_CARD_THEME) {
+    delete next.card_theme;
+  }
+
   if (next.show_name === DEFAULT_SHOW_NAME) {
     delete next.show_name;
   }
@@ -833,7 +1047,16 @@ function cleanConfig(config: BlindControlCardConfig): BlindControlCardConfig {
     delete next.show_position;
   }
 
+  if (next.show_slider === DEFAULT_SHOW_SLIDER) {
+    delete next.show_slider;
+  }
+
+  if (next.show_buttons === DEFAULT_SHOW_BUTTONS) {
+    delete next.show_buttons;
+  }
+
   const sliderHeight = cleanNumber(next.slider_height, 120, 420);
+  const sliderWidth = cleanNumber(next.slider_width, 8, 44);
   const buttonSize = cleanNumber(next.button_size, 34, 72);
 
   if (sliderHeight === undefined) {
@@ -842,10 +1065,37 @@ function cleanConfig(config: BlindControlCardConfig): BlindControlCardConfig {
     next.slider_height = sliderHeight;
   }
 
+  if (sliderWidth === undefined) {
+    delete next.slider_width;
+  } else {
+    next.slider_width = sliderWidth;
+  }
+
   if (buttonSize === undefined) {
     delete next.button_size;
   } else {
     next.button_size = buttonSize;
+  }
+
+  next.button_background_color = cleanCssColor(next.button_background_color);
+  next.open_button_background_color = cleanCssColor(next.open_button_background_color);
+  next.stop_button_background_color = cleanCssColor(next.stop_button_background_color);
+  next.close_button_background_color = cleanCssColor(next.close_button_background_color);
+
+  if (!next.button_background_color) {
+    delete next.button_background_color;
+  }
+
+  if (!next.open_button_background_color) {
+    delete next.open_button_background_color;
+  }
+
+  if (!next.stop_button_background_color) {
+    delete next.stop_button_background_color;
+  }
+
+  if (!next.close_button_background_color) {
+    delete next.close_button_background_color;
   }
 
   return next;
@@ -853,6 +1103,15 @@ function cleanConfig(config: BlindControlCardConfig): BlindControlCardConfig {
 
 function isCardSize(size: unknown): size is BlindControlCardSize {
   return size === "small" || size === "medium" || size === "large";
+}
+
+function isCardTheme(theme: unknown): theme is BlindControlCardTheme {
+  return (
+    theme === "default" ||
+    theme === "minimal" ||
+    theme === "filled" ||
+    theme === "outline"
+  );
 }
 
 function cleanNumber(value: unknown, min: number, max: number): number | undefined {
@@ -872,6 +1131,20 @@ function clampNumber(
   fallback: number
 ): number {
   return cleanNumber(value, min, max) ?? fallback;
+}
+
+function cleanCssColor(value: unknown): string | undefined {
+  if (typeof value !== "string") {
+    return undefined;
+  }
+
+  const color = value.trim();
+
+  if (!color || /[;{}]/.test(color)) {
+    return undefined;
+  }
+
+  return color;
 }
 
 if (!customElements.get("blind-control-card")) {
